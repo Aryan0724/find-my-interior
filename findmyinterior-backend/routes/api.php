@@ -28,8 +28,17 @@ Route::prefix('v1')->group(function () {
     
     // TEMPORARY: Render Free Tier Migration Route
     Route::get('/setup-db-secret', function () {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
-        return "Database migrated and seeded successfully! Please remove this route later.";
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+            return "Database migrated and seeded successfully! Please remove this route later.";
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
     });
 
     // ─── Auth ─────────────────────────────────────────────────────────────
