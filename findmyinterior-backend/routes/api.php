@@ -26,6 +26,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     
+    // TEMPORARY: Render Free Tier Migration Route
+    Route::get('/setup-db-secret', function () {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        return "Database migrated and seeded successfully! Please remove this route later.";
+    });
+
     // ─── Auth ─────────────────────────────────────────────────────────────
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
