@@ -1,0 +1,52 @@
+{
+  "info": {
+    "name": "FindMyInterior API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Homepage",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/homepage", "host": ["{{base_url}}"], "path": ["homepage"] }
+          }
+        },
+        {
+          "name": "Listings",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/listings?city=Patna", "host": ["{{base_url}}"], "path": ["listings"], "query": [{"key": "city", "value": "Patna"}] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    }
+  ]
+}
