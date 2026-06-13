@@ -25,8 +25,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone', 20);
             $table->string('email')->nullable();
-            $table->enum('status', ['open', 'in_progress', 'closed'])->default('open');
-            $table->boolean('is_verified')->default(false);
+            $table->enum('status', ['open', 'bidding', 'shortlisted', 'awarded', 'completed', 'expired'])->default('open');
+            $table->foreignId('awarded_vendor_id')->nullable()->constrained('users');
+            $table->foreignId('awarded_bid_id')->nullable();
+            $table->decimal('award_value', 12, 2)->nullable();
+            $table->timestamp('awarded_at')->nullable();
+            
             $table->softDeletes();
             $table->timestamps();
 

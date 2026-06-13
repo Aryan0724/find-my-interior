@@ -33,10 +33,12 @@ return new class extends Migration
             $table->integer('team_size')->nullable();
             $table->decimal('avg_rating', 3, 2)->default(0.00);
             $table->integer('review_count')->default(0);
-            $table->boolean('is_verified')->default(false);
+            
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_premium')->default(false);
-            $table->enum('status', ['draft', 'active', 'inactive', 'suspended'])->default('draft');
+            $table->timestamp('sponsored_until')->nullable();
+            $table->integer('sponsored_rank')->default(0);
+            $table->enum('status', ['pending', 'active', 'inactive', 'suspended'])->default('pending');
             $table->integer('views_count')->default(0);
             $table->softDeletes();
             $table->timestamps();
@@ -47,7 +49,7 @@ return new class extends Migration
             $table->index('district_id');
             $table->index('status');
             $table->index('is_featured');
-            $table->index('is_verified');
+
             $table->index('is_premium');
         });
     }

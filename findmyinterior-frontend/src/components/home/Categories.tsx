@@ -1,44 +1,60 @@
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Paintbrush, Hammer, Sofa, Ruler } from "lucide-react"; // Fallback icons
+import { 
+  Sofa, 
+  Building2, 
+  HardHat, 
+  ChefHat, 
+  Paintbrush, 
+  Hammer, 
+  Zap, 
+  Wrench, 
+  Box, 
+  Layers, 
+  Grid3X3 
+} from "lucide-react";
 
-export function Categories({ categories }: { categories: any[] }) {
-  if (!categories || categories.length === 0) return null;
+export function Categories({ categories }: { categories?: any[] }) {
+  const staticServices = [
+    { name: "Interior Designers", icon: <Sofa className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Architects", icon: <Building2 className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Civil Contractors", icon: <HardHat className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Modular Kitchen", icon: <ChefHat className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Painters", icon: <Paintbrush className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Carpenters", icon: <Hammer className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Electricians", icon: <Zap className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Plumbers", icon: <Wrench className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "False Ceiling", icon: <Box className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "Flooring", icon: <Layers className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+    { name: "More Services", icon: <Grid3X3 className="w-8 h-8 text-[#E8701A]" strokeWidth={1.2} /> },
+  ];
 
   return (
-    <section className="w-full py-20 bg-slate-50">
+    <section className="w-full bg-[#f8f9fa] py-8">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-              Browse by Category
-            </h2>
-            <p className="text-slate-500 text-lg">
-              Find exactly what you need for your home.
-            </p>
-          </div>
-          <Link href="/categories" className="hidden md:inline-flex text-orange-600 font-semibold hover:text-orange-700">
-            View All Categories →
+        {/* Header */}
+        <div className="flex justify-between items-end mb-6">
+          <h2 className="text-[1.1rem] font-bold text-[#0a1c3a] uppercase tracking-wide">
+            Browse By Services
+          </h2>
+          <Link href="/services" className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+            View All
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-          {categories.slice(0, 10).map((cat) => (
-            <Link key={cat.id} href={`/search?category=${cat.slug}`}>
-              <Card className="hover:border-orange-500 hover:shadow-md transition-all cursor-pointer group bg-white border-slate-200">
-                <CardContent className="p-6 flex flex-col items-center text-center justify-center min-h-[140px]">
-                  <div className="h-12 w-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-orange-600 group-hover:text-white transition-colors">
-                    {/* Use Lucide icon based on name or generic if not matched */}
-                    {cat.name.includes("Interior") ? <Sofa /> : 
-                     cat.name.includes("Architect") ? <Ruler /> : 
-                     cat.name.includes("Paint") ? <Paintbrush /> : 
-                     <Hammer />}
-                  </div>
-                  <h3 className="font-semibold text-slate-900 text-sm md:text-base group-hover:text-orange-600 transition-colors">
-                    {cat.name}
-                  </h3>
-                </CardContent>
-              </Card>
+        {/* Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:flex xl:flex-wrap justify-between gap-4">
+          {staticServices.map((service, idx) => (
+            <Link 
+              href={`/search?category=${service.name.toLowerCase().replace(/ /g, '-')}`}
+              key={idx}
+              className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center gap-3 hover:shadow-lg hover:border-orange-200 transition-all cursor-pointer xl:w-[calc(9.09%-12px)] min-w-[100px]"
+            >
+              <div className="bg-orange-50/50 p-3 rounded-full shrink-0">
+                {service.icon}
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold text-center text-[#0a1c3a] leading-tight">
+                {service.name}
+              </span>
             </Link>
           ))}
         </div>

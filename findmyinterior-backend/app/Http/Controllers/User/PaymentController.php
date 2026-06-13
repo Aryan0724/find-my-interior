@@ -89,20 +89,30 @@ class PaymentController extends Controller
             'razorpay_signature'  => ['required', 'string'],
         ]);
 
-        $api = new RazorpayApi(config('services.razorpay.key'), config('services.razorpay.secret'));
+        if (empty(config('services.razorpay.key'))) {
+            // Mock verification for local/testing
+            if ($data['razorpay_signature'] !== 'mock_signature') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Payment verification failed (mock).',
+                ], 422);
+            }
+        } else {
+            $api = new RazorpayApi(config('services.razorpay.key'), config('services.razorpay.secret'));
 
-        try {
-            $api->utility->verifyPaymentSignature([
-                'razorpay_order_id'   => $data['razorpay_order_id'],
-                'razorpay_payment_id' => $data['razorpay_payment_id'],
-                'razorpay_signature'  => $data['razorpay_signature'],
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Payment verification failed for order {$data['razorpay_order_id']}: " . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Payment verification failed. If money was deducted, contact support.',
-            ], 422);
+            try {
+                $api->utility->verifyPaymentSignature([
+                    'razorpay_order_id'   => $data['razorpay_order_id'],
+                    'razorpay_payment_id' => $data['razorpay_payment_id'],
+                    'razorpay_signature'  => $data['razorpay_signature'],
+                ]);
+            } catch (\Exception $e) {
+                Log::error("Payment verification failed for order {$data['razorpay_order_id']}: " . $e->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Payment verification failed. If money was deducted, contact support.',
+                ], 422);
+            }
         }
 
         $payment = Payment::where('razorpay_order_id', $data['razorpay_order_id'])->firstOrFail();
@@ -154,13 +164,13 @@ class PaymentController extends Controller
 
             // Sync is_premium flag to the entity for directory queries
             $user = $payment->user;
-            if ($user->role === 'builder' && $user->builder) {
+            if ($user->hasRole('builder') && $user->builder) {
                 $user->builder->update(['is_premium' => true]);
-            } elseif ($user->role === 'supplier' && $user->supplier) {
+            } elseif ($user->hasRole('supplier') && $user->supplier) {
                 $user->supplier->update(['is_premium' => true]);
-            } elseif ($user->role === 'worker' && $user->worker) {
+            } elseif ($user->hasRole('worker') && $user->worker) {
                 $user->worker->update(['is_premium' => true]);
-            } elseif ($user->role === 'business' && $user->listing) {
+            } elseif ($user->hasRole('business') && $user->listing) {
                 $user->listing->update(['is_premium' => true]);
             }
 

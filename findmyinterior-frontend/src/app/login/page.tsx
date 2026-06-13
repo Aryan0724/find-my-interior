@@ -25,10 +25,11 @@ export default function LoginPage() {
 
     try {
       const res = await api.post("/auth/login", { email, password });
-      setAuth(res.data.user, res.data.token);
+      const { user, token } = res.data.data;
+      setAuth(user, token);
       
       // Redirect based on role
-      if (res.data.user.role === 'admin') {
+      if (user.role === 'admin') {
         router.push("/admin");
       } else {
         router.push("/dashboard");

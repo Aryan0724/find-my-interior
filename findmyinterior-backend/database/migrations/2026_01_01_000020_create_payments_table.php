@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('razorpay_signature')->nullable();
             $table->decimal('amount', 10, 2);
             $table->string('currency', 10)->default('INR');
-            $table->enum('purpose', ['subscription', 'premium_listing', 'featured_listing', 'lead_unlock']);
+            $table->enum('purpose', ['wallet_recharge', 'subscription', 'premium_listing', 'featured_listing']);
             $table->enum('status', ['pending', 'success', 'failed', 'refunded'])->default('pending');
             $table->json('meta')->nullable()->comment('Additional context: listing_id, plan_id, etc.');
             $table->timestamps();

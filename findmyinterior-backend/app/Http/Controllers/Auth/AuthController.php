@@ -20,6 +20,7 @@ class AuthController extends Controller
      */
     public function register(Request $request): JsonResponse
     {
+        Log::info("AuthController::register - start");
         $data = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'unique:users'],
@@ -27,16 +28,24 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)],
             'role'     => ['required', 'in:customer,business,builder,supplier,worker'],
         ]);
+        Log::info("AuthController::register - validation passed");
 
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'phone'    => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
-            'role'     => $data['role'],
         ]);
+        Log::info("AuthController::register - user created");
+
+        $role = \App\Models\Role::where('slug', $data['role'])->first();
+        if ($role) {
+            $user->roles()->attach($role->id);
+        }
+        Log::info("AuthController::register - role attached");
 
         $token = $user->createToken('api-token')->plainTextToken;
+        Log::info("AuthController::register - token created");
 
         return response()->json([
             'success' => true,

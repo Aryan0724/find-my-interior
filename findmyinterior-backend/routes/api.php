@@ -16,6 +16,14 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\Api\V1\BidController;
+use App\Http\Controllers\Api\V1\WalletController;
+use App\Http\Controllers\Api\V1\UnlockController;
+use App\Http\Controllers\Api\V1\RecommendationController;
+use App\Http\Controllers\Api\V1\VendorMetricController;
+use App\Http\Controllers\Api\V1\InviteController;
+use App\Http\Controllers\Api\V1\Admin\RevenueController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -114,6 +122,58 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         Route::get('reviews', [ReviewController::class, 'myReviews']);
     });
 
+    // ─── Marketplace Engine (Protected) ───────────────────────────────────
+    Route::middleware('auth:sanctum')->group(function () {
+        // Bids
+        Route::post('bids', [BidController::class, 'store']);
+        Route::get('bids', [BidController::class, 'myBids']);
+        Route::get('requirements/{id}/bids', [BidController::class, 'indexForRequirement']);
+        Route::get('requirements/{id}/bids/compare', [BidController::class, 'compare']);
+        Route::patch('bids/{bid}/accept', [BidController::class, 'accept']);
+        Route::patch('bids/{bid}/reject', [BidController::class, 'reject']);
+        Route::patch('bids/{bid}/award', [BidController::class, 'award']);
+        Route::patch('requirements/{id}/complete', [BidController::class, 'complete']);
+        
+        // Wallet
+        Route::get('wallet', [WalletController::class, 'index']);
+        Route::post('wallet/add-funds', [WalletController::class, 'store']); // Placeholder for testing
+        
+        // Contact Unlocks
+        Route::post('/requirements/{requirement}/unlock', [UnlockController::class, 'unlockContact']);
+        Route::get('/requirements/{requirement}/pricing-context', [\App\Http\Controllers\Api\V1\PricingController::class, 'getPricingContext']);
+        // Saved Items
+        Route::post('/saved-projects/{requirement}', [\App\Http\Controllers\Api\V1\SaveController::class, 'saveProject']);
+        Route::delete('/saved-projects/{requirement}', [\App\Http\Controllers\Api\V1\SaveController::class, 'unsaveProject']);
+        Route::get('/saved-projects', [\App\Http\Controllers\Api\V1\SaveController::class, 'getSavedProjects']);
+        
+        Route::post('/saved-vendors/{vendor}', [\App\Http\Controllers\Api\V1\SaveController::class, 'saveVendor']);
+        Route::delete('/saved-vendors/{vendor}', [\App\Http\Controllers\Api\V1\SaveController::class, 'unsaveVendor']);
+        Route::get('/saved-vendors', [\App\Http\Controllers\Api\V1\SaveController::class, 'getSavedVendors']);
+
+        // Messaging
+        Route::get('/conversations', [\App\Http\Controllers\Api\V1\ConversationController::class, 'index']);
+        Route::post('/requirements/{id}/conversations', [\App\Http\Controllers\Api\V1\ConversationController::class, 'store']);
+        Route::get('/conversations/{id}/messages', [\App\Http\Controllers\Api\V1\MessageController::class, 'index']);
+        Route::post('/conversations/{id}/messages', [\App\Http\Controllers\Api\V1\MessageController::class, 'store']);
+
+        // Recommendations
+        Route::get('/requirements/{id}/recommendations', [RecommendationController::class, 'index']);
+        Route::post('/requirements/{id}/invite-vendor', [InviteController::class, 'invite']);
+
+        // Vendor Metrics
+        Route::get('/vendors/me/metrics', [VendorMetricController::class, 'show']);
+
+        // Notifications
+        Route::get('/notifications', function (Request $request) {
+            return $request->user()->notifications;
+        });
+        Route::patch('/notifications/{id}/read', function (Request $request, $id) {
+            $notification = $request->user()->notifications()->findOrFail($id);
+            $notification->markAsRead();
+            return response()->json(['message' => 'Marked as read']);
+        });
+    });
+
     // ─── Payments (Protected) ─────────────────────────────────────────────
     Route::middleware('auth:sanctum')->prefix('payments')->group(function () {
         Route::post('create-order', [PaymentController::class, 'createOrder']);
@@ -145,5 +205,8 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         
         Route::get('requirements', [AdminController::class, 'requirements']);
         Route::patch('requirements/{id}/close', [AdminController::class, 'closeRequirement']);
+
+        // Revenue Dashboard
+        Route::get('revenue', [RevenueController::class, 'index']);
     });
 });

@@ -6,7 +6,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  withCredentials: true, // Needed if using Sanctum cookie-based auth in future, but we are using tokens
+  withCredentials: false,
 });
 
 // Request Interceptor: Attach token from localStorage for client-side requests

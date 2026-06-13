@@ -29,16 +29,18 @@ return new class extends Migration
             $table->integer('delivered_projects')->default(0);
             $table->decimal('avg_rating', 3, 2)->default(0.00);
             $table->integer('review_count')->default(0);
-            $table->boolean('is_verified')->default(false);
+            
             $table->boolean('is_featured')->default(false);
-            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->timestamp('sponsored_until')->nullable();
+            $table->integer('sponsored_rank')->default(0);
+            $table->enum('status', ['pending', 'active', 'inactive'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
 
             $table->index('city_id');
             $table->index('district_id');
             $table->index('is_featured');
-            $table->index('is_verified');
+
             $table->index('status');
         });
     }

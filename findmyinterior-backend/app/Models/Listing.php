@@ -18,7 +18,7 @@ class Listing extends Model
         'title', 'slug', 'description', 'tagline', 'cover_image',
         'phone', 'whatsapp', 'email', 'website',
         'city', 'district', 'state', 'address', 'lat', 'lng',
-        'years_experience', 'team_size',
+        'years_experience', 'team_size', 'status', 'is_premium', 'is_featured', 'is_verified',
     ];
 
     protected $casts = [];

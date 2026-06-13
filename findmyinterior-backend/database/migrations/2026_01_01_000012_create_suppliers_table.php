@@ -27,9 +27,11 @@ return new class extends Migration
             $table->string('business_type', 100)->nullable();
             $table->decimal('avg_rating', 3, 2)->default(0.00);
             $table->integer('review_count')->default(0);
-            $table->boolean('is_verified')->default(false);
+            
             $table->boolean('is_featured')->default(false);
-            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->timestamp('sponsored_until')->nullable();
+            $table->integer('sponsored_rank')->default(0);
+            $table->enum('status', ['pending', 'active', 'inactive'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
 

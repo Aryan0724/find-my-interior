@@ -23,33 +23,41 @@ class DashboardController extends Controller
             'user' => [
                 'id'           => $user->id,
                 'name'         => $user->name,
-                'role'         => $user->role,
+                'roles'        => $user->roles->pluck('slug'),
                 'subscription' => $user->activeSubscription?->plan?->name ?? 'Basic (Free)',
+                'wallet_balance' => \Illuminate\Support\Facades\DB::table('wallets')->where('user_id', $user->id)->value('balance') ?? 0.0,
             ],
         ];
 
-        // Homeowner — show their posted requirements
-        if ($user->role === 'customer') {
+        // Homeowner — show their posted requirements and received bids
+        if ($user->hasRole('customer')) {
             $data['requirements'] = RequirementResource::collection(
                 $user->requirements()->with(['category', 'images'])->latest()->get()
             );
             $data['total_requirements'] = $user->requirements()->count();
+            
+            // Get all bids received on their requirements
+            $data['received_bids'] = \App\Models\Bid::with(['requirement', 'professional'])
+                ->whereIn('requirement_id', $user->requirements()->pluck('id'))
+                ->latest()
+                ->get();
         }
 
-        // Business/Builder/Supplier — show their leads and reviews
-        if (in_array($user->role, ['business', 'builder', 'supplier', 'worker'])) {
-            $entity = match($user->role) {
-                'builder' => $user->builder,
-                'supplier' => $user->supplier,
-                'worker' => $user->worker,
-                default => $user->listing,
-            };
+        // Business/Builder/Supplier/Worker — show their leads and reviews
+        $isProfessional = $user->hasRole('business') || $user->hasRole('builder') || $user->hasRole('supplier') || $user->hasRole('worker');
+        
+        if ($isProfessional) {
+            $entity = null;
+            if ($user->hasRole('builder')) $entity = $user->builder;
+            elseif ($user->hasRole('supplier')) $entity = $user->supplier;
+            elseif ($user->hasRole('worker')) $entity = $user->worker;
+            else $entity = $user->listing; // Default to business
 
             $data['total_inquiries'] = $entity?->inquiries()->count() ?? 0;
             $data['total_reviews']   = $entity?->approvedReviews()->count() ?? 0;
             $data['avg_rating']      = $entity?->avg_rating ?? 0;
             
-            if ($user->role === 'business') {
+            if ($user->hasRole('business')) {
                 $data['listing_count']   = $user->listings()->count();
                 $data['total_views']     = $user->listings()->sum('views_count');
             } else {
@@ -77,6 +85,21 @@ class DashboardController extends Controller
             $data['recent_payments'] = PaymentResource::collection(
                 $user->payments()->latest()->take(5)->get()
             );
+
+            // Fetch their submitted bids
+            $data['submitted_bids'] = \App\Models\Bid::with('requirement.city')
+                ->where('professional_id', $user->id)
+                ->latest()
+                ->get();
+                
+            // Fetch unlocked contacts
+            $data['unlocked_contacts'] = $user->contactUnlocks()
+                ->with('requirement.city')
+                ->latest()
+                ->get();
+
+            // Fetch Vendor Metrics
+            $data['vendor_metrics'] = $user->vendorMetric;
         }
 
         return response()->json([

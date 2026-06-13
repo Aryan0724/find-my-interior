@@ -24,12 +24,12 @@ return new class extends Migration
             $table->integer('experience_years')->default(0);
             $table->decimal('daily_rate', 8, 2)->nullable();
             $table->boolean('is_available')->default(true);
-            $table->boolean('is_verified')->default(false);
+            
             $table->boolean('is_featured')->default(false);
             $table->decimal('avg_rating', 3, 2)->default(0.00);
             $table->integer('review_count')->default(0);
             $table->text('bio')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->enum('status', ['pending', 'active', 'inactive'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
 

@@ -24,6 +24,16 @@ class Requirement extends Model
 
     // ─── Relationships ────────────────────────────────────────────────────────
 
+    public function unlock_pricing()
+    {
+        return $this->morphOne(PricingContext::class, 'reference');
+    }
+
+    public function conversations()
+    {
+        return $this->morphMany(Conversation::class, 'conversationable');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -52,6 +62,11 @@ class Requirement extends Model
     public function contactUnlocks(): HasMany
     {
         return $this->hasMany(ContactUnlock::class);
+    }
+
+    public function bids(): HasMany
+    {
+        return $this->hasMany(Bid::class);
     }
 
     // ─── Scopes ───────────────────────────────────────────────────────────────

@@ -14,16 +14,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone', 20)->nullable();
             $table->string('password');
-            $table->enum('role', ['guest', 'customer', 'business', 'builder', 'supplier', 'worker', 'admin'])->default('customer');
+            $table->enum('verification_level', ['unverified', 'mobile_verified', 'identity_verified', 'business_verified', 'site_verified'])->default('unverified');
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_verified')->default(false);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
 
-            $table->index('role');
             $table->index('is_active');
+            $table->index('verification_level');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

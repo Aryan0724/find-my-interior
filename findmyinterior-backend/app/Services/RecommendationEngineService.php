@@ -1,0 +1,193 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Requirement;
+use App\Models\Listing;
+use App\Models\VendorMetric;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
+class RecommendationEngineService
+{
+    // V2 Scoring Weights (total = 100)
+    const WEIGHT_CATEGORY     = 30;
+    const WEIGHT_CITY         = 25;
+    const WEIGHT_AVAILABILITY = 10;
+    const WEIGHT_RATING       = 10;
+    const WEIGHT_COMPLETION   = 10;
+    const WEIGHT_RESPONSE     = 5;
+    const WEIGHT_VERIFICATION = 5;
+    const WEIGHT_ACTIVITY     = 5;
+
+    /**
+     * Generate and cache top vendor recommendations for a given requirement.
+     */
+    public function generateFor(Requirement $requirement): void
+    {
+        // Fetch vendors who have a Listing in the matching category
+        $vendors = Listing::with(['user.vendorMetric'])
+            ->where('category_id', $requirement->category_id)
+            ->whereHas('user')
+            ->get()
+            ->unique('user_id');
+
+        if ($vendors->isEmpty()) {
+            return;
+        }
+
+        $scores = [];
+        foreach ($vendors as $listing) {
+            $vendor = $listing->user;
+            if (!$vendor) continue;
+
+            $result = $this->calculateScore($requirement, $listing, $vendor);
+            $scores[] = [
+                'requirement_id' => $requirement->id,
+                'vendor_id'      => $vendor->id,
+                'match_score'    => $result['score'],
+                'score_breakdown_json' => json_encode($result['breakdown']),
+                'recommended_at' => now(),
+            ];
+        }
+
+        // Sort descending and take top 20
+        usort($scores, fn($a, $b) => $b['match_score'] <=> $a['match_score']);
+        $top = array_slice($scores, 0, 20);
+
+        // Upsert into requirement_recommendations (safe to re-run)
+        foreach ($top as $row) {
+            $exists = DB::table('requirement_recommendations')
+                ->where('requirement_id', $row['requirement_id'])
+                ->where('vendor_id', $row['vendor_id'])
+                ->exists();
+
+            if (!$exists) {
+                DB::table('requirement_recommendations')->insert(array_merge($row, ['created_at' => now(), 'updated_at' => now()]));
+                VendorMetric::where('vendor_id', $row['vendor_id'])->increment('recommendations_received');
+            } else {
+                DB::table('requirement_recommendations')
+                    ->where('requirement_id', $row['requirement_id'])
+                    ->where('vendor_id', $row['vendor_id'])
+                    ->update(array_merge($row, ['updated_at' => now()]));
+            }
+        }
+
+        // Notify top vendors with flood protection
+        $this->notifyTopVendors($top, $requirement);
+    }
+
+    /**
+     * Calculate a match score (0–100) for a vendor listing against a requirement.
+     */
+    public function calculateScore(Requirement $requirement, Listing $listing, User $vendor): array
+    {
+        $score = 0.0;
+        $breakdown = [];
+        $metrics = $vendor->vendorMetric;
+
+        // 1. Category Match (30 pts)
+        if ($listing->category_id === $requirement->category_id) {
+            $score += self::WEIGHT_CATEGORY;
+            $breakdown['category'] = self::WEIGHT_CATEGORY;
+        } else {
+            $breakdown['category'] = 0;
+        }
+
+        // 2. City Match (25 pts)
+        if ($listing->city_id && $listing->city_id === $requirement->city_id) {
+            $score += self::WEIGHT_CITY;
+            $breakdown['city'] = self::WEIGHT_CITY;
+        } elseif ($listing->district_id && $listing->district_id === $requirement->district_id) {
+            $score += self::WEIGHT_CITY * 0.5; // Partial match
+            $breakdown['city'] = self::WEIGHT_CITY * 0.5;
+        } else {
+            $breakdown['city'] = 0;
+        }
+
+        // 3. Rating (10 pts)
+        $ratingAvg = $metrics?->rating_average ?? 4.5;
+        $ratingScore = ($ratingAvg / 5.0) * self::WEIGHT_RATING;
+        $score += $ratingScore;
+        $breakdown['rating'] = round($ratingScore, 2);
+
+        // 4. Completion Rate (10 pts)
+        $completionRate = $metrics?->completion_rate ?? 0;
+        $completionScore = ($completionRate / 100.0) * self::WEIGHT_COMPLETION;
+        $score += $completionScore;
+        $breakdown['completion'] = round($completionScore, 2);
+
+        // 5. Response Rate (5 pts)
+        $responseRate = $metrics?->response_rate ?? 0;
+        $responseScore = ($responseRate / 100.0) * self::WEIGHT_RESPONSE;
+        $score += $responseScore;
+        $breakdown['response'] = round($responseScore, 2);
+
+        // 6. Verification (5 pts)
+        if ($vendor->is_verified ?? false) {
+            $score += self::WEIGHT_VERIFICATION;
+            $breakdown['verification'] = self::WEIGHT_VERIFICATION;
+        } else {
+            $breakdown['verification'] = 0;
+        }
+
+        // 7. Recent Activity (5 pts)
+        $activityScore = 0;
+        if ($metrics?->last_active_at) {
+            $daysInactive = now()->diffInDays($metrics->last_active_at);
+            if ($daysInactive <= 7) {
+                $activityScore = self::WEIGHT_ACTIVITY;
+            } elseif ($daysInactive <= 30) {
+                $activityScore = self::WEIGHT_ACTIVITY * 0.5;
+            }
+        }
+        $score += $activityScore;
+        $breakdown['activity'] = $activityScore;
+
+        // 8. Availability (10 pts)
+        if ($listing->status === 'active' || $listing->status === 'published') {
+            $score += self::WEIGHT_AVAILABILITY;
+            $breakdown['availability'] = self::WEIGHT_AVAILABILITY;
+        } else {
+            $breakdown['availability'] = 0;
+        }
+
+        return [
+            'score' => round($score, 2),
+            'breakdown' => $breakdown
+        ];
+    }
+
+    /**
+     * Notify top vendors about the new requirement, respecting their daily limit.
+     */
+    protected function notifyTopVendors(array $topVendors, Requirement $requirement): void
+    {
+        foreach ($topVendors as $row) {
+            $vendor = User::find($row['vendor_id']);
+            if (!$vendor) continue;
+
+            // Check daily notification count for today
+            $sentToday = DB::table('notifications')
+                ->where('user_id', $vendor->id)
+                ->whereDate('created_at', today())
+                ->count();
+
+            $limit = $vendor->daily_notification_limit ?? 10;
+
+            if ($sentToday >= $limit) {
+                continue; // Skip — flood protection
+            }
+
+            DB::table('notifications')->insert([
+                'user_id'    => $vendor->id,
+                'type'       => 'new_requirement_match',
+                'title'      => 'New Project Match',
+                'message'    => "A new requirement matching your profile has been posted: {$requirement->title}",
+                'data'       => json_encode(['requirement_id' => $requirement->id, 'match_score' => $row['match_score']]),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    }
+}

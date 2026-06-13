@@ -20,8 +20,10 @@ class User extends Authenticatable
         'phone',
         'password',
         'avatar',
-        'role',
+        'verification_level',
         'is_active',
+        'is_verified',
+        'daily_notification_limit',
     ];
 
     protected $hidden = [
@@ -58,6 +60,21 @@ class User extends Authenticatable
         return $this->hasOne(Worker::class);
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')->orderBy('created_at', 'desc');
+    }
+
+    public function conversationsAsCustomer()
+    {
+        return $this->hasMany(Conversation::class, 'customer_id');
+    }
+
+    public function conversationsAsVendor()
+    {
+        return $this->hasMany(Conversation::class, 'vendor_id');
+    }
+
     public function requirements(): HasMany
     {
         return $this->hasMany(Requirement::class);
@@ -85,7 +102,7 @@ class User extends Authenticatable
 
     public function activeSubscription(): HasOne
     {
-        return $this->hasMany(UserSubscription::class)
+        return $this->hasOne(UserSubscription::class)
             ->where('status', 'active')
             ->where('expires_at', '>', now())
             ->latestOfMany();
@@ -96,31 +113,56 @@ class User extends Authenticatable
         return $this->hasMany(ContactUnlock::class);
     }
 
-    // ─── Helpers ──────────────────────────────────────────────────────────────
+    public function submittedBids(): HasMany
+    {
+        return $this->hasMany(Bid::class, 'professional_id');
+    }
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function vendorMetrics(): HasOne
+    {
+        return $this->hasOne(VendorMetric::class, 'vendor_id');
+    }
+
+    // Alias for eager-loading with with('vendorMetric')
+    public function vendorMetric(): HasOne
+    {
+        return $this->hasOne(VendorMetric::class, 'vendor_id');
+    }
+
+    public function hasRole(string $roleSlug): bool
+    {
+        return $this->roles()->where('slug', $roleSlug)->exists();
+    }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->hasRole('admin');
     }
 
     public function isBuilder(): bool
     {
-        return $this->role === 'builder';
+        return $this->hasRole('builder');
     }
 
     public function isSupplier(): bool
     {
-        return $this->role === 'supplier';
+        return $this->hasRole('supplier');
     }
 
     public function isWorker(): bool
     {
-        return $this->role === 'worker';
+        return $this->hasRole('worker');
     }
 
     public function isBusiness(): bool
     {
-        return $this->role === 'business';
+        return $this->hasRole('business');
     }
 
     public function hasPremiumSubscription(): bool

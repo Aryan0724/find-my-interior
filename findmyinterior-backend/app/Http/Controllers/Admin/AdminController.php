@@ -28,23 +28,43 @@ class AdminController extends Controller
      */
     public function dashboard(): JsonResponse
     {
+        $totalRevenue = Payment::successful()->sum('amount');
+        $unlockRevenue = Payment::successful()->where('purpose', 'lead_unlock')->sum('amount');
+        $bidRevenue = Payment::successful()->where('purpose', 'bid_fee')->sum('amount');
+        $subRevenue = Payment::successful()->where('purpose', 'subscription')->sum('amount');
+
+        // Top Professionals by leads unlocked/bids (using User relation count)
+        $topProfessionals = User::whereIn('role', ['business', 'worker', 'builder'])
+            ->withCount(['contactUnlocks', 'submittedBids'])
+            ->orderByRaw('(contact_unlocks_count + submitted_bids_count) DESC')
+            ->take(5)
+            ->get(['id', 'name', 'role']);
+
+        // Top Districts by Requirement volume
+        $topDistricts = Requirement::select('district', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('district')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
+
         return response()->json([
             'success' => true,
             'data'    => [
                 'stats' => [
                     'total_users'           => User::count(),
-                    'total_listings'        => Listing::count(),
-                    'total_builders'        => Builder::count(),
-                    'total_suppliers'       => Supplier::count(),
-                    'total_workers'         => Worker::count(),
+                    'active_professionals'  => User::whereIn('role', ['business', 'worker', 'builder', 'supplier'])->where('is_active', true)->count(),
                     'total_requirements'    => Requirement::count(),
+                    'total_bids'            => \App\Models\Bid::count(),
                     'open_requirements'     => Requirement::open()->count(),
-                    'pending_reviews'       => Review::where('is_approved', false)->count(),
-                    'total_revenue'         => Payment::successful()->sum('amount'),
+                    'total_revenue'         => $totalRevenue,
+                    'unlock_revenue'        => $unlockRevenue,
+                    'bid_revenue'           => $bidRevenue,
+                    'subscription_revenue'  => $subRevenue,
                     'active_subscriptions'  => UserSubscription::active()->count(),
                     'total_inquiries'       => Inquiry::count(),
-                    'unread_inquiries'      => Inquiry::unread()->count(),
                 ],
+                'top_professionals' => $topProfessionals,
+                'top_districts' => $topDistricts,
                 'recent_users' => User::latest()->take(5)->get(['id', 'name', 'email', 'role', 'created_at']),
                 'recent_payments' => Payment::with('user:id,name,email')
                     ->latest()
@@ -53,7 +73,7 @@ class AdminController extends Controller
                 'pending_verifications' => Listing::where('is_verified', false)
                     ->with('user:id,name,email')
                     ->latest()
-                    ->take(20)
+                    ->take(10)
                     ->get(['id', 'user_id', 'title', 'city', 'created_at'])
                     ->map(fn($l) => array_merge($l->toArray(), ['type' => 'Listing'])),
             ],

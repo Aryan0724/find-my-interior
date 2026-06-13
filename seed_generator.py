@@ -13,8 +13,9 @@ def get_image(seed, width=800, height=600):
 
 def generate_marketplace_seeder():
     out = []
-    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Listing;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\n")
+    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Listing;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\nuse Illuminate\\Support\\Facades\\DB;\n")
     out.append("class MarketplaceSeeder extends Seeder {\n  public function run(): void {\n  Listing::unguard();\n")
+    out.append("  $bizRoleId = DB::table('roles')->where('slug', 'business')->value('id');\n")
     
     business_names = ["{} Interior Studio", "{} Design Associates", "Magadh {} Interiors", "{} Decor Hub", "Bihar {} Works", "Patliputra {} Solutions", "{} Royal Designs", "{} Space Planners", "Modern {} Designers", "{} Elite Interiors"]
     
@@ -22,13 +23,15 @@ def generate_marketplace_seeder():
         city, district = get_random_city()
         name = random.choice(business_names).format(city)
         out.append(f"""
-        $u = User::create(['name' => '{name} Account', 'email' => 'designer{i}@example.com', 'password' => Hash::make('password'), 'role' => 'business', 'is_active' => true, 'phone' => '987654{str(i).zfill(4)}']);
+        $u = User::create(['name' => '{name} Account', 'email' => 'designer{i}@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '987654{str(i).zfill(4)}']);
+        DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $bizRoleId]);
+        DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         Listing::create([
             'user_id' => $u->id, 'category_id' => 1, 'title' => '{name}', 'slug' => Str::slug('{name}-{i}'),
             'description' => 'We are the leading interior designers in {city}. Specializing in modern residential and commercial designs.',
             'years_experience' => {random.randint(2, 20)},
             'city' => '{city}', 'district' => '{district}', 'address' => 'Main Road, {city}',
-            'status' => 'active', 'is_verified' => {random.choice(['true', 'true', 'false'])}, 'is_featured' => {random.choice(['true', 'false', 'false'])},
+            'status' => 'active', 'is_featured' => {random.choice(['true', 'false', 'false'])},
             'avg_rating' => {round(random.uniform(3.8, 5.0), 1)}, 'review_count' => {random.randint(10, 150)},
             'cover_image' => '{get_image("designer"+str(i), 400, 400)}'
         ]);
@@ -39,13 +42,15 @@ def generate_marketplace_seeder():
         city, district = get_random_city()
         name = random.choice(arch_names).format(city)
         out.append(f"""
-        $u = User::create(['name' => '{name} Account', 'email' => 'arch{i}@example.com', 'password' => Hash::make('password'), 'role' => 'business', 'is_active' => true, 'phone' => '987655{str(i).zfill(4)}']);
+        $u = User::create(['name' => '{name} Account', 'email' => 'arch{i}@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '987655{str(i).zfill(4)}']);
+        DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $bizRoleId]);
+        DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         Listing::create([
             'user_id' => $u->id, 'category_id' => 2, 'title' => '{name}', 'slug' => Str::slug('{name}-{i}'),
             'description' => 'Expert architects in {city} focusing on Luxury Villas and Modern Residential complexes.',
             'years_experience' => {random.randint(5, 30)},
             'city' => '{city}', 'district' => '{district}', 'address' => 'Arch Road, {city}',
-            'status' => 'active', 'is_verified' => {random.choice(['true', 'true', 'false'])}, 'is_featured' => {random.choice(['true', 'false', 'false'])},
+            'status' => 'active', 'is_featured' => {random.choice(['true', 'false', 'false'])},
             'avg_rating' => {round(random.uniform(4.0, 5.0), 1)}, 'review_count' => {random.randint(15, 200)},
             'cover_image' => '{get_image("arch"+str(i), 400, 400)}'
         ]);
@@ -56,21 +61,24 @@ def generate_marketplace_seeder():
 
 def generate_builder_seeder():
     out = []
-    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Builder;\nuse App\\Models\\BuilderProject;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\n")
+    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Builder;\nuse App\\Models\\BuilderProject;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\nuse Illuminate\\Support\\Facades\\DB;\n")
     out.append("class BuilderSeeder extends Seeder {\n  public function run(): void {\n  Builder::unguard();\n  BuilderProject::unguard();\n")
+    out.append("  $bRoleId = DB::table('roles')->where('slug', 'builder')->value('id');\n")
     b_names = ["Magadh Builders", "Patna Infra Projects", "Ganga Realtors", "Mithila Build Estate", "Nalanda Smart Homes", "Bhagalpur Township", "Gaya Lotus Constructions", "Purnia Dream Homes", "Bihar Heights", "Kosi Developers", "Sonbhadra Builders", "Maurya Enclave", "Ashoka Builders", "Aryabhatta Constructions", "Vikramshila Realty", "Tirhut Projects", "Bhojpur City Builders", "Champaran Green Homes", "Vaishali Heritage", "Rajgir Smart City"]
     for i, name in enumerate(b_names, 1):
         city, district = get_random_city()
         rera = f"BR/RERA/{random.randint(1000, 9999)}" if random.random() > 0.2 else 'null'
         rera_val = f"'{rera}'" if rera != 'null' else 'null'
         out.append(f"""
-        $u = User::create(['name' => '{name} Account', 'email' => 'builder{i}@example.com', 'password' => Hash::make('password'), 'role' => 'builder', 'is_active' => true, 'phone' => '987656{str(i).zfill(4)}']);
+        $u = User::create(['name' => '{name} Account', 'email' => 'builder{i}@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '987656{str(i).zfill(4)}']);
+        DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $bRoleId]);
+        DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $b{i} = Builder::create([
             'user_id' => $u->id, 'company_name' => '{name}', 'slug' => Str::slug('{name}-{i}'),
             'tagline' => 'Building the future of {city}',
             'city' => '{city}', 'district' => '{district}', 'established_year' => {random.randint(2000, 2020)},
             'rera_number' => {rera_val}, 'total_projects' => {random.randint(2, 10)},
-            'is_verified' => true, 'is_featured' => {random.choice(['true', 'false'])},
+            'is_featured' => {random.choice(['true', 'false'])},
             'avg_rating' => {round(random.uniform(3.5, 5.0), 1)}, 'review_count' => {random.randint(20, 300)},
             'cover_image' => '{get_image("builder"+str(i), 400, 400)}',
             'phone' => '987656{str(i).zfill(4)}', 'email' => 'contact@builder{i}.com'
@@ -102,8 +110,9 @@ def generate_builder_seeder():
 
 def generate_supplier_seeder():
     out = []
-    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Supplier;\nuse App\\Models\\SupplierProduct;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\n")
+    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Supplier;\nuse App\\Models\\SupplierProduct;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\nuse Illuminate\\Support\\Facades\\DB;\n")
     out.append("class SupplierSeeder extends Seeder {\n  public function run(): void {\n  Supplier::unguard();\n  SupplierProduct::unguard();\n")
+    out.append("  $sRoleId = DB::table('roles')->where('slug', 'supplier')->value('id');\n")
     categories = ['Tiles', 'Marble', 'Granite', 'Plywood', 'Hardware', 'Furniture', 'Lighting', 'Glass', 'Aluminium', 'Sanitary']
     s_names = ["Ganga {} House", "Patna {} Depot", "Bihar {} World", "Magadh {} Traders", "{} Emporium"]
     for i in range(1, 41):
@@ -111,12 +120,14 @@ def generate_supplier_seeder():
         city, district = get_random_city()
         name = random.choice(s_names).format(cat)
         out.append(f"""
-        $u = User::create(['name' => '{name} Account', 'email' => 'supplier{i}@example.com', 'password' => Hash::make('password'), 'role' => 'supplier', 'is_active' => true, 'phone' => '987657{str(i).zfill(4)}']);
+        $u = User::create(['name' => '{name} Account', 'email' => 'supplier{i}@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '987657{str(i).zfill(4)}']);
+        DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
+        DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s{i} = Supplier::create([
             'user_id' => $u->id, 'company_name' => '{name}', 'slug' => Str::slug('{name}-{i}'),
             'tagline' => 'Top dealer of {cat} in {city}. We provide high-quality materials at wholesale rates.',
             'city' => '{city}', 'district' => '{district}',
-            'status' => 'active', 'is_verified' => true, 'is_featured' => {random.choice(['true', 'false'])},
+            'status' => 'active', 'is_featured' => {random.choice(['true', 'false'])},
             'avg_rating' => {round(random.uniform(4.0, 5.0), 1)}, 'review_count' => {random.randint(10, 150)},
             'cover_image' => '{get_image("supplier"+str(i), 400, 400)}',
             'phone' => '987657{str(i).zfill(4)}', 'email' => 'contact@supplier{i}.com'
@@ -139,8 +150,9 @@ def generate_supplier_seeder():
 
 def generate_worker_seeder():
     out = []
-    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Worker;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\n")
+    out.append("<?php\nnamespace Database\\Seeders;\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\User;\nuse App\\Models\\Worker;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\nuse Illuminate\\Support\\Facades\\DB;\n")
     out.append("class WorkerSeeder extends Seeder {\n  public function run(): void {\n  Worker::unguard();\n")
+    out.append("  $wRoleId = DB::table('roles')->where('slug', 'worker')->value('id');\n")
     categories = ['Carpenter', 'Electrician', 'Painter', 'Welder', 'Fabricator', 'Tile Mason', 'POP Expert', 'Site Supervisor']
     first_names = ["Raju", "Amit", "Suresh", "Ramesh", "Manoj", "Dinesh", "Sanjay", "Rajesh", "Pappu", "Vikas", "Ashok", "Sunil"]
     last_names = ["Kumar", "Singh", "Sharma", "Yadav", "Paswan", "Mishra", "Pandey"]
@@ -149,7 +161,9 @@ def generate_worker_seeder():
         city, district = get_random_city()
         name = f"{random.choice(first_names)} {random.choice(last_names)}"
         out.append(f"""
-        $u = User::create(['name' => '{name}', 'email' => 'worker{i}@example.com', 'password' => Hash::make('password'), 'role' => 'worker', 'is_active' => true, 'phone' => '987658{str(i).zfill(4)}']);
+        $u = User::create(['name' => '{name}', 'email' => 'worker{i}@example.com', 'password' => Hash::make('password'), 'verification_level' => 'identity_verified', 'is_active' => true, 'phone' => '987658{str(i).zfill(4)}']);
+        DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $wRoleId]);
+        DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 1000]);
         Worker::create([
             'user_id' => $u->id, 'name' => '{name}', 'slug' => Str::slug('{name}-{i}'),
             'skill' => '{cat}', 'experience_years' => {random.randint(2, 25)},

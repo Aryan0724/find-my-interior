@@ -33,6 +33,7 @@ class RequirementResource extends JsonResource
             'name'           => $canSeeContact ? $this->name : '***',
             'phone'          => $canSeeContact ? $this->phone : '+91 ***** *****',
             'email'          => $canSeeContact ? $this->email : null,
+            'is_unlocked'    => $canSeeContact,
             'created_at'     => $this->created_at?->diffForHumans(),
         ];
     }
