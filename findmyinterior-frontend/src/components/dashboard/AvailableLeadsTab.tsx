@@ -6,12 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Search } from "lucide-react";
+import { useAuthStore } from "@/lib/store/useAuthStore";
 
 function locationName(value: any) {
   return typeof value === "string" ? value : value?.name || "Location not set";
 }
 
 export function AvailableLeadsTab() {
+  const { user } = useAuthStore();
   const [requirements, setRequirements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [unlockingId, setUnlockingId] = useState<number | null>(null);
@@ -79,18 +81,20 @@ export function AvailableLeadsTab() {
                   <p className="text-slate-600 text-sm line-clamp-2">{req.description}</p>
                 </div>
                 
-                <div className="flex flex-col gap-2 shrink-0 border-l pl-4 md:items-center justify-center">
-                  <div className="text-sm font-medium text-slate-600 mb-1 text-center">
-                    Unlock Contact
+                {req.user_id !== user?.id && (
+                  <div className="flex flex-col gap-2 shrink-0 border-l pl-4 md:items-center justify-center">
+                    <div className="text-sm font-medium text-slate-600 mb-1 text-center">
+                      Unlock Contact
+                    </div>
+                    <Button 
+                      onClick={() => handleUnlock(req.id)} 
+                      disabled={unlockingId === req.id}
+                      className="bg-orange-600 hover:bg-orange-700 w-full"
+                    >
+                      {unlockingId === req.id ? "Unlocking..." : "Unlock (₹50)"}
+                    </Button>
                   </div>
-                  <Button 
-                    onClick={() => handleUnlock(req.id)} 
-                    disabled={unlockingId === req.id}
-                    className="bg-orange-600 hover:bg-orange-700 w-full"
-                  >
-                    {unlockingId === req.id ? "Unlocking..." : "Unlock (₹50)"}
-                  </Button>
-                </div>
+                )}
               </div>
             ))}
           </div>

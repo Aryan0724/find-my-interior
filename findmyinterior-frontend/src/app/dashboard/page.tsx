@@ -93,7 +93,7 @@ export default function UserDashboard() {
             <LayoutDashboard className="h-5 w-5 text-orange-600" /> {user.name}'s Workspace
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-slate-600 hidden md:block">{role.toUpperCase()}</span>
+            <span className="text-sm font-medium text-slate-600 hidden md:block">{role?.toUpperCase() || 'USER'}</span>
             <Button variant="ghost" size="sm" onClick={handleLogout} className="text-slate-500 hover:text-red-600">
               <LogOut className="h-4 w-4 mr-2" /> Logout
             </Button>

@@ -352,7 +352,9 @@ export default function RequirementDetail() {
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h2 className="text-[#15803d] font-black text-xl">UNLOCK CONTACT</h2>
-                    <p className="text-slate-700 text-sm font-medium">Get Client Contact Number</p>
+                    <p className="text-slate-700 text-sm font-medium">
+                      {isOwner ? "Your Contact Details" : "Get Client Contact Number"}
+                    </p>
                   </div>
                   <div className="w-12 h-12 bg-[#16a34a] rounded-full flex items-center justify-center relative shadow-sm">
                     <Phone className="w-5 h-5 text-white" />
@@ -370,18 +372,32 @@ export default function RequirementDetail() {
                       <CheckCircle className="w-4 h-4" /> Contact Unlocked
                     </div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Contact Details</span>
+                      <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
+                        {isOwner ? "Your Contact Details" : "Contact Details"}
+                      </span>
                     </div>
                     
-                    <p className="text-sm text-slate-700 mb-5 leading-relaxed">
-                      Unlock & connect directly with the client to discuss the project.
-                    </p>
-                    <Button 
-                      onClick={() => router.push("/messages")}
-                      className="w-full bg-[#0b1b36] hover:bg-slate-800 text-white font-bold h-12 text-base rounded-md flex gap-2 shadow-md"
-                    >
-                      <MessageCircle className="w-5 h-5" /> Message Client
-                    </Button>
+                    {!isOwner && (
+                      <>
+                        <p className="text-sm text-slate-700 mb-5 leading-relaxed">
+                          Unlock & connect directly with the client to discuss the project.
+                        </p>
+                        <Button 
+                          onClick={() => router.push("/messages")}
+                          className="w-full bg-[#0b1b36] hover:bg-slate-800 text-white font-bold h-12 text-base rounded-md flex gap-2 shadow-md"
+                        >
+                          <MessageCircle className="w-5 h-5" /> Message Client
+                        </Button>
+                      </>
+                    )}
+                    {isOwner && (
+                      <Button 
+                        onClick={() => router.push("/dashboard?tab=bids_received")}
+                        className="w-full mt-4 bg-[#0a1c3a] hover:bg-slate-800 text-white font-bold h-12 text-base rounded-md flex gap-2 shadow-md"
+                      >
+                        <Users className="w-5 h-5" /> View Received Bids
+                      </Button>
+                    )}
                   </div>
                 ) : (
                   <>

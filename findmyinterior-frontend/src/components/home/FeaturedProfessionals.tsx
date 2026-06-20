@@ -2,6 +2,7 @@
 
 import { Star, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { InquiryForm } from "@/components/forms/InquiryForm";
 
 export function FeaturedProfessionals() {
   const pros = [
@@ -41,11 +42,9 @@ export function FeaturedProfessionals() {
                   <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                   {pro.rating} <span className="text-gray-400 font-normal">({pro.reviews})</span>
                 </div>
-                <Link href="/post-requirement">
-                  <button className="text-sm font-semibold text-[#E8701A] hover:bg-orange-50 px-3 py-1.5 rounded-lg transition border border-transparent hover:border-orange-100">
-                    Get Quote
-                  </button>
-                </Link>
+                <div className="w-[100px]">
+                  <InquiryForm type="Listing" id={1} title={pro.name} />
+                </div>
               </div>
             </div>
           ))}

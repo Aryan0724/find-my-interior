@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +33,7 @@ export function ProfileTab() {
           gst_number: res.data.data[0].gst_number || "",
           pan_number: res.data.data[0].pan_number || "",
           address: res.data.data[0].address || "",
+          website: res.data.data[0].website || "",
         });
       }
     } catch (e) {
@@ -77,6 +77,7 @@ export function ProfileTab() {
     );
   }
 
+  return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
@@ -86,7 +87,12 @@ export function ProfileTab() {
           </div>
           <div className="w-32 text-right space-y-1">
             <div className="text-xs font-medium text-slate-500">Profile Completion</div>
-            <Progress value={completionScore} className="h-2" />
+            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-orange-600 transition-all duration-500 ease-out" 
+                style={{ width: `${completionScore}%` }}
+              />
+            </div>
             <div className="text-xs font-bold text-orange-600">{completionScore}%</div>
           </div>
         </div>
@@ -128,6 +134,10 @@ export function ProfileTab() {
           <div>
             <label className="block text-sm font-medium mb-1">PAN Number (Optional)</label>
             <Input name="pan_number" value={formData.pan_number || ""} onChange={handleChange} placeholder="ABCDE1234F" />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-sm font-medium mb-1">Website URL (Optional)</label>
+            <Input name="website" value={formData.website || ""} onChange={handleChange} placeholder="https://mywebsite.com" />
           </div>
         </div>
         

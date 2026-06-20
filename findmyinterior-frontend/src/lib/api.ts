@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from './store/useAuthStore';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
@@ -10,10 +11,10 @@ const api = axios.create({
   withCredentials: false,
 });
 
-// Request Interceptor: Attach token from localStorage for client-side requests
+// Request Interceptor: Attach token from Zustand store for client-side requests
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('auth_token');
+    const token = useAuthStore.getState().token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,10 +28,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
-        // Optional: redirect to login
-        // window.location.href = '/login';
+        useAuthStore.getState().logout();
+        window.location.href = '/login';
+        return new Promise(() => {}); // Prevent unhandled rejection overlay while redirecting
       }
     }
     return Promise.reject(error);

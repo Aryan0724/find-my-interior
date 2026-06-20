@@ -20,6 +20,26 @@ export function Hero() {
   const [city, setCity] = useState("Patna");
   const [service, setService] = useState("");
   const [showServiceDropdown, setShowServiceDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [budget, setBudget] = useState("");
+  const [showBudgetDropdown, setShowBudgetDropdown] = useState(false);
+
+  const availableCities = [
+    "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", 
+    "Darbhanga", "Bihar Sharif", "Arrah", "Begusarai", "Katihar"
+  ];
+
+  const availableBudgets = [
+    "All Budget",
+    "Under ₹50,000",
+    "₹50,000 - ₹2 Lakhs",
+    "₹2 Lakhs - ₹10 Lakhs",
+    "₹10 Lakhs+"
+  ];
+
+  const filteredCities = availableCities.filter(c => 
+    c.toLowerCase().includes(city.toLowerCase())
+  );
 
   const availableServices = [
     "Interior Designer", "Contractor", "Architect", "Builder",
@@ -33,8 +53,9 @@ export function Hero() {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (city !== "All Cities") params.append("city", city);
-    if (service !== "All Services") params.append("search", service);
+    if (city && city !== "All Cities") params.append("city", city);
+    if (service && service !== "All Services") params.append("search", service);
+    if (budget && budget !== "All Budget") params.append("budget", budget);
     router.push(`/professionals?${params.toString()}`);
   };
 
@@ -78,20 +99,44 @@ export function Hero() {
           </div>
           
           {/* Main Search Box */}
-          <div className="w-full max-w-3xl bg-white p-2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 flex flex-col md:flex-row gap-2">
+          <div className="w-full max-w-3xl bg-white p-2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 flex flex-col md:flex-row gap-2 relative">
             {/* City */}
-            <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition">
+            <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition relative">
               <span className="text-[0.65rem] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Select City</span>
               <div className="flex items-center justify-between">
                 <input 
                   type="text"
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    setShowCityDropdown(true);
+                  }}
+                  onFocus={() => setShowCityDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowCityDropdown(false), 200)}
                   className="bg-transparent font-semibold text-[#0a1c3a] outline-none w-full"
                   placeholder="e.g. Patna"
                 />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
+              {/* City Autocomplete Dropdown */}
+              {showCityDropdown && filteredCities.length > 0 && (
+                <div className="absolute top-full left-0 w-full mt-2 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-50 max-h-60 overflow-y-auto">
+                  {filteredCities.map(c => (
+                    <div 
+                      key={c} 
+                      className="px-4 py-2 hover:bg-orange-50 cursor-pointer text-sm font-medium text-slate-700"
+                      onClick={() => {
+                        setCity(c);
+                        setShowCityDropdown(false);
+                      }}
+                    >
+                      {c}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+
             {/* Service */}
             <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition relative">
               <span className="text-[0.65rem] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Select Service</span>
@@ -108,11 +153,12 @@ export function Hero() {
                   className="bg-transparent font-semibold text-[#0a1c3a] outline-none w-full"
                   placeholder="e.g. Contractor"
                 />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
               
-              {/* Autocomplete Dropdown */}
+              {/* Service Autocomplete Dropdown */}
               {showServiceDropdown && filteredServices.length > 0 && (
-                <div className="absolute top-full left-0 w-full mt-2 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-50">
+                <div className="absolute top-full left-0 w-full mt-2 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-50 max-h-60 overflow-y-auto">
                   {filteredServices.map(s => (
                     <div 
                       key={s} 
@@ -128,16 +174,41 @@ export function Hero() {
                 </div>
               )}
             </div>
+
             {/* Budget */}
-            <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition">
+            <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition relative">
               <span className="text-[0.65rem] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Select Budget</span>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center font-semibold text-[#0a1c3a]">
-                  <Wallet className="w-4 h-4 mr-1.5 text-gray-400" /> All Budget
+              <div 
+                className="flex items-center justify-between w-full"
+                onClick={() => setShowBudgetDropdown(!showBudgetDropdown)}
+                onBlur={() => setTimeout(() => setShowBudgetDropdown(false), 200)}
+                tabIndex={0}
+              >
+                <div className="flex items-center font-semibold text-[#0a1c3a] truncate">
+                  <Wallet className="w-4 h-4 mr-1.5 text-gray-400 shrink-0" /> {budget || "All Budget"}
                 </div>
-                <ChevronDown className="w-4 h-4 text-gray-400" />
+                <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
               </div>
+              
+              {/* Budget Dropdown */}
+              {showBudgetDropdown && (
+                <div className="absolute top-full left-0 w-full mt-2 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-50">
+                  {availableBudgets.map(b => (
+                    <div 
+                      key={b} 
+                      className="px-4 py-2 hover:bg-orange-50 cursor-pointer text-sm font-medium text-slate-700"
+                      onClick={() => {
+                        setBudget(b === "All Budget" ? "" : b);
+                        setShowBudgetDropdown(false);
+                      }}
+                    >
+                      {b}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+
             {/* Button */}
             <button 
               onClick={handleSearch}

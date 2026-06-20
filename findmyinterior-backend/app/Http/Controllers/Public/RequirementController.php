@@ -106,8 +106,10 @@ class RequirementController extends Controller
 
         // Notify matching professionals (mocking the match by sending to some active professionals)
         // In a real scenario, this would filter by category, district, and subscription.
-        $professionals = User::whereIn('role', ['business', 'worker', 'builder', 'supplier'])
-            ->where('is_active', true)
+        $professionals = User::whereHas('roles', function ($q) {
+            $q->whereIn('slug', ['business', 'worker', 'builder', 'supplier']);
+        })
+              ->where('is_active', true)
             ->take(50) // Limit to avoid massive email blasts during testing
             ->get();
             

@@ -63,10 +63,6 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login" className="hover:text-white flex items-center space-x-1">
-                <UserPlus className="w-3.5 h-3.5" />
-                <span>Login</span>
-              </Link>
               <Link href="/register" className="hover:text-white flex items-center space-x-1">
                 <Briefcase className="w-3.5 h-3.5" />
                 <span>Become a Pro</span>
@@ -128,9 +124,9 @@ export function Navbar() {
             
             <div className="w-px h-6 bg-gray-200 mx-2"></div>
             
-            <Link href="/professionals">
+            <Link href={isAuthenticated ? "/dashboard?tab=bids_received" : "/post-requirement"}>
               <button className="bg-[#0a1c3a] hover:bg-[#0a1c3a]/90 text-white text-sm font-semibold px-5 py-2 rounded shadow-sm transition-all h-full flex items-center justify-center">
-                COMPARE NOW
+                COMPARE BIDS
               </button>
             </Link>
             
@@ -145,15 +141,27 @@ export function Navbar() {
             </Link>
             
             {!isAuthenticated && (
-              <Link href="/register">
-                <button className="border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 flex items-center px-4 py-2 rounded shadow-sm transition-all h-full">
-                  <Briefcase className="w-4 h-4 mr-2 text-gray-500" />
-                  <div className="flex flex-col text-left">
-                    <span className="text-sm font-semibold leading-tight">List Your Business</span>
-                    <span className="text-[0.65rem] leading-tight text-gray-500">Grow Your Business</span>
-                  </div>
-                </button>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/login">
+                  <button className="text-[#0a1c3a] hover:text-[#E8701A] font-semibold text-sm px-4 py-2 transition-colors">
+                    Login
+                  </button>
+                </Link>
+                <Link href="/register">
+                  <button className="bg-[#0a1c3a] hover:bg-[#0a1c3a]/90 text-white text-sm font-semibold px-5 py-2 rounded shadow-sm transition-all h-full flex items-center justify-center">
+                    Register
+                  </button>
+                </Link>
+                <Link href="/register">
+                  <button className="border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 flex items-center px-4 py-2 rounded shadow-sm transition-all h-full ml-2">
+                    <Briefcase className="w-4 h-4 mr-2 text-gray-500" />
+                    <div className="flex flex-col text-left">
+                      <span className="text-sm font-semibold leading-tight">List Your Business</span>
+                      <span className="text-[0.65rem] leading-tight text-gray-500">Grow Your Business</span>
+                    </div>
+                  </button>
+                </Link>
+              </div>
             )}
           </div>
 
