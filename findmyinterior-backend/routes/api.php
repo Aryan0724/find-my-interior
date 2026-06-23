@@ -47,8 +47,26 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
     Route::get('/setup-db-secret', function () {
         try {
             \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-            return "Database migrated and seeded successfully!";
+            
+            // Run ONLY the essential core seeders to prevent 504 Gateway Timeouts on Render
+            \Illuminate\Support\Facades\Artisan::call('db:seed', [
+                '--class' => 'Database\\Seeders\\AdminSeeder',
+                '--force' => true
+            ]);
+            \Illuminate\Support\Facades\Artisan::call('db:seed', [
+                '--class' => 'Database\\Seeders\\CategorySeeder',
+                '--force' => true
+            ]);
+            \Illuminate\Support\Facades\Artisan::call('db:seed', [
+                '--class' => 'Database\\Seeders\\SubscriptionPlanSeeder',
+                '--force' => true
+            ]);
+            \Illuminate\Support\Facades\Artisan::call('db:seed', [
+                '--class' => 'Database\\Seeders\\OpportunityTypeSeeder',
+                '--force' => true
+            ]);
+            
+            return "Database migrated and core tables seeded successfully! (Skipped heavy seeders to prevent timeout)";
         } catch (\Throwable $e) {
             return response()->json([
                 'error' => $e->getMessage(),
