@@ -43,40 +43,6 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         return response()->json(['status' => 'ok', 'database' => 'connected']);
     });
 
-    // TEMPORARY: Render Free Tier Migration Route
-    Route::get('/setup-db-secret', function () {
-        try {
-            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-            
-            // Run ONLY the essential core seeders to prevent 504 Gateway Timeouts on Render
-            \Illuminate\Support\Facades\Artisan::call('db:seed', [
-                '--class' => 'Database\\Seeders\\AdminSeeder',
-                '--force' => true
-            ]);
-            \Illuminate\Support\Facades\Artisan::call('db:seed', [
-                '--class' => 'Database\\Seeders\\CategorySeeder',
-                '--force' => true
-            ]);
-            \Illuminate\Support\Facades\Artisan::call('db:seed', [
-                '--class' => 'Database\\Seeders\\SubscriptionPlanSeeder',
-                '--force' => true
-            ]);
-            \Illuminate\Support\Facades\Artisan::call('db:seed', [
-                '--class' => 'Database\\Seeders\\OpportunityTypeSeeder',
-                '--force' => true
-            ]);
-            
-            return "Database migrated and core tables seeded successfully! (Skipped heavy seeders to prevent timeout)";
-        } catch (\Throwable $e) {
-            return response()->json([
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ], 500);
-        }
-    });
-
     // ─── Auth ─────────────────────────────────────────────────────────────
     Route::prefix('auth')->middleware('throttle:auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
