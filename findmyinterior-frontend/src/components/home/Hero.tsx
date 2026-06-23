@@ -128,7 +128,7 @@ export function Hero() {
           </div>
           
           {/* Main Search Box */}
-          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl p-2.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/60 flex flex-col md:flex-row gap-2 relative opacity-0 animate-fade-in-up delay-200">
+          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl p-2.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/60 flex flex-col md:flex-row gap-2 relative z-50 opacity-0 animate-fade-in-up delay-200">
             {/* City */}
             <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition relative">
               <span className="text-[0.65rem] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Select City</span>
