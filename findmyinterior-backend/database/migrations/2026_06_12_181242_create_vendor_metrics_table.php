@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('vendor_metrics', function (Blueprint $table) {
 
             $table->id();
-            $table->foreignId('vendor_id')->constrained('users')->onDelete('cascade')->unique();
+            $table->foreignId('vendor_id')->constrained('users')->onDelete('cascade');
+            $table->unique('vendor_id');
             $table->integer('total_bids')->default(0);
             $table->integer('successful_bids')->default(0);
             $table->integer('award_count')->default(0);

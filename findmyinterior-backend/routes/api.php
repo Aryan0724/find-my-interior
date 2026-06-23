@@ -170,6 +170,7 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
 
         // Messaging
         Route::get('/conversations', [\App\Http\Controllers\Api\V1\ConversationController::class, 'index']);
+        Route::get('/conversations/{id}', [\App\Http\Controllers\Api\V1\ConversationController::class, 'show']);
         Route::post('/requirements/{id}/conversations', [\App\Http\Controllers\Api\V1\ConversationController::class, 'store']);
         Route::get('/conversations/{id}/messages', [\App\Http\Controllers\Api\V1\MessageController::class, 'index']);
         Route::post('/conversations/{id}/messages', [\App\Http\Controllers\Api\V1\MessageController::class, 'store']);

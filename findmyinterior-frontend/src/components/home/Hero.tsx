@@ -49,9 +49,10 @@ export function Hero() {
   );
 
   const availableServices = [
-    "Interior Designer", "Contractor", "Architect", "Builder",
-    "Painter", "False Ceiling", "Carpenter", "Plumber",
-    "Electrician", "Tiles Supplier", "Hardware Supplier"
+    "Interior Designer", "Interior Company", "Interior Project", 
+    "Contractor", "Construction", "Construction Company", 
+    "Architect", "Builder", "Painter", "False Ceiling", 
+    "Carpenter", "Plumber", "Electrician", "Tiles Supplier", "Hardware Supplier"
   ];
 
   const filteredServices = availableServices.filter(s => 
@@ -59,10 +60,6 @@ export function Hero() {
   );
 
   const handleSearch = () => {
-    if (isPro) {
-      router.push('/dashboard');
-      return;
-    }
     const params = new URLSearchParams();
     if (city && city !== "All Cities") params.append("city", city);
     if (service && service !== "All Services") params.append("search", service);
@@ -118,20 +115,20 @@ export function Hero() {
           )}
 
           {/* 4 Value Props */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-8 bg-white/50 p-3 rounded-lg border border-gray-100 inline-flex w-fit backdrop-blur-sm shadow-sm">
-            <div className="flex items-center text-sm font-bold text-gray-800">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-10 p-4 rounded-2xl glass-panel opacity-0 animate-fade-in-up delay-100">
+            <div className="flex items-center text-sm font-bold text-gray-800 hover:text-[#E8701A] transition-colors cursor-default">
               <ShieldCheck className="w-5 h-5 text-[#E8701A] mr-2" /> Verified Pros
             </div>
-            <div className="flex items-center text-sm font-bold text-gray-800">
+            <div className="flex items-center text-sm font-bold text-gray-800 hover:text-[#E8701A] transition-colors cursor-default">
               <FileText className="w-5 h-5 text-[#E8701A] mr-2" /> Get Multiple Quotes
             </div>
-            <div className="flex items-center text-sm font-bold text-gray-800">
+            <div className="flex items-center text-sm font-bold text-gray-800 hover:text-[#E8701A] transition-colors cursor-default">
               <IndianRupee className="w-5 h-5 text-[#E8701A] mr-2" /> Best Prices
             </div>
           </div>
           
           {/* Main Search Box */}
-          <div className="w-full max-w-3xl bg-white p-2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 flex flex-col md:flex-row gap-2 relative">
+          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl p-2.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/60 flex flex-col md:flex-row gap-2 relative opacity-0 animate-fade-in-up delay-200">
             {/* City */}
             <div className="flex-1 flex flex-col justify-center px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 cursor-pointer hover:bg-gray-50 rounded-lg transition relative">
               <span className="text-[0.65rem] text-gray-500 font-medium uppercase tracking-wider mb-0.5">Select City</span>
@@ -244,21 +241,21 @@ export function Hero() {
             {/* Button */}
             <button 
               onClick={handleSearch}
-              className="bg-[#0a1c3a] hover:bg-[#0a1c3a]/90 text-white font-semibold text-sm px-6 py-4 rounded-lg shadow-md transition flex items-center justify-center whitespace-nowrap h-full"
+              className="bg-gradient-to-r from-[#0a1c3a] to-[#1a2c4a] hover:from-[#E8701A] hover:to-[#c25a12] text-white font-bold text-sm px-8 py-4 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center whitespace-nowrap h-full"
             >
-              {isPro ? "GO TO DASHBOARD" : "SEARCH PROS"} <span className="ml-2">›</span>
+              SEARCH PROS <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
             </button>
           </div>
           
           {/* Popular Searches */}
           {!isPro && (
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-              <span className="font-semibold text-gray-700 mr-2">Popular Searches:</span>
-              {["Interior Designer", "Modular Kitchen", "Painter", "False Ceiling", "Carpenter", "Tiles Supplier", "Architect"].map((term) => (
+            <div className="mt-6 flex flex-wrap items-center gap-3 text-xs opacity-0 animate-fade-in-up delay-300">
+              <span className="font-semibold text-gray-700 mr-1 uppercase tracking-wider">Popular Searches:</span>
+              {["Interior Designer", "Modular Kitchen", "Painter", "False Ceiling", "Carpenter", "Architect"].map((term) => (
                 <Link 
                   key={term} 
                   href={`/professionals?search=${encodeURIComponent(term)}`}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-md cursor-pointer transition"
+                  className="bg-white/60 hover:bg-white backdrop-blur-sm text-gray-700 border border-gray-200 hover:border-orange-300 hover:text-orange-600 px-3.5 py-1.5 rounded-full cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md"
                 >
                   {term}
                 </Link>
@@ -268,12 +265,13 @@ export function Hero() {
         </div>
 
         {/* Right Content - Lead Card */}
-        <div className="w-full lg:w-[35%] max-w-sm mt-8 lg:mt-0">
-          <div className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden border border-gray-100">
+        <div className="w-full lg:w-[38%] max-w-sm mt-12 lg:mt-0 opacity-0 animate-fade-in-right delay-200">
+          <div className="bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden border border-gray-100 transform transition-transform duration-500 hover:scale-[1.02]">
             {user ? (
               <>
-                <div className="bg-[#0a1c3a] text-white p-6">
-                  <h3 className="text-xl font-bold mb-1">
+                <div className="bg-gradient-to-br from-[#0a1c3a] to-[#1a2c4a] text-white p-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                  <h3 className="text-2xl font-extrabold mb-2 relative z-10">
                     {isCustomer ? "Manage Your Projects" : `Welcome back, ${user.name.split(' ')[0]}!`}
                   </h3>
                   <p className="text-sm text-white/80">

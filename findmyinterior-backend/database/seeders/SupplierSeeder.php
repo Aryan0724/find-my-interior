@@ -13,7 +13,7 @@ class SupplierSeeder extends Seeder {
   SupplierProduct::unguard();
   $sRoleId = DB::table('roles')->where('slug', 'supplier')->value('id');
 
-        $u = User::create(['name' => 'Patna Furniture Depot Account', 'email' => 'supplier1@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570001']);
+        $u = User::create(['name' => 'Patna Furniture Depot Account', 'email' => 'market_supplier1@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570001']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s1 = Supplier::create([
@@ -66,7 +66,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product5/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Aluminium World Account', 'email' => 'supplier2@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570002']);
+        $u = User::create(['name' => 'Bihar Aluminium World Account', 'email' => 'market_supplier2@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570002']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s2 = Supplier::create([
@@ -119,7 +119,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product10/600/600'
             ]);
             
-        $u = User::create(['name' => 'Patna Glass Depot Account', 'email' => 'supplier3@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570003']);
+        $u = User::create(['name' => 'Patna Glass Depot Account', 'email' => 'market_supplier3@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570003']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s3 = Supplier::create([
@@ -172,7 +172,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product15/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Lighting Traders Account', 'email' => 'supplier4@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570004']);
+        $u = User::create(['name' => 'Magadh Lighting Traders Account', 'email' => 'market_supplier4@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570004']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s4 = Supplier::create([
@@ -225,7 +225,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product20/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Sanitary Traders Account', 'email' => 'supplier5@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570005']);
+        $u = User::create(['name' => 'Magadh Sanitary Traders Account', 'email' => 'market_supplier5@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570005']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s5 = Supplier::create([
@@ -278,7 +278,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product25/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Hardware Traders Account', 'email' => 'supplier6@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570006']);
+        $u = User::create(['name' => 'Magadh Hardware Traders Account', 'email' => 'market_supplier6@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570006']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s6 = Supplier::create([
@@ -331,7 +331,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product30/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'supplier7@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570007']);
+        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'market_supplier7@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570007']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s7 = Supplier::create([
@@ -384,7 +384,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product35/600/600'
             ]);
             
-        $u = User::create(['name' => 'Plywood Emporium Account', 'email' => 'supplier8@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570008']);
+        $u = User::create(['name' => 'Plywood Emporium Account', 'email' => 'market_supplier8@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570008']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s8 = Supplier::create([
@@ -437,7 +437,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product40/600/600'
             ]);
             
-        $u = User::create(['name' => 'Ganga Furniture House Account', 'email' => 'supplier9@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570009']);
+        $u = User::create(['name' => 'Ganga Furniture House Account', 'email' => 'market_supplier9@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570009']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s9 = Supplier::create([
@@ -490,7 +490,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product45/600/600'
             ]);
             
-        $u = User::create(['name' => 'Granite Emporium Account', 'email' => 'supplier10@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570010']);
+        $u = User::create(['name' => 'Granite Emporium Account', 'email' => 'market_supplier10@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570010']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s10 = Supplier::create([
@@ -543,7 +543,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product50/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Granite Traders Account', 'email' => 'supplier11@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570011']);
+        $u = User::create(['name' => 'Magadh Granite Traders Account', 'email' => 'market_supplier11@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570011']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s11 = Supplier::create([
@@ -596,7 +596,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product55/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Glass World Account', 'email' => 'supplier12@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570012']);
+        $u = User::create(['name' => 'Bihar Glass World Account', 'email' => 'market_supplier12@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570012']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s12 = Supplier::create([
@@ -649,7 +649,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product60/600/600'
             ]);
             
-        $u = User::create(['name' => 'Tiles Emporium Account', 'email' => 'supplier13@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570013']);
+        $u = User::create(['name' => 'Tiles Emporium Account', 'email' => 'market_supplier13@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570013']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s13 = Supplier::create([
@@ -702,7 +702,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product65/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Lighting Traders Account', 'email' => 'supplier14@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570014']);
+        $u = User::create(['name' => 'Magadh Lighting Traders Account', 'email' => 'market_supplier14@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570014']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s14 = Supplier::create([
@@ -755,7 +755,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product70/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Furniture Traders Account', 'email' => 'supplier15@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570015']);
+        $u = User::create(['name' => 'Magadh Furniture Traders Account', 'email' => 'market_supplier15@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570015']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s15 = Supplier::create([
@@ -808,7 +808,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product75/600/600'
             ]);
             
-        $u = User::create(['name' => 'Patna Plywood Depot Account', 'email' => 'supplier16@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570016']);
+        $u = User::create(['name' => 'Patna Plywood Depot Account', 'email' => 'market_supplier16@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570016']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s16 = Supplier::create([
@@ -861,7 +861,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product80/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Aluminium Traders Account', 'email' => 'supplier17@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570017']);
+        $u = User::create(['name' => 'Magadh Aluminium Traders Account', 'email' => 'market_supplier17@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570017']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s17 = Supplier::create([
@@ -914,7 +914,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product85/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Hardware Traders Account', 'email' => 'supplier18@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570018']);
+        $u = User::create(['name' => 'Magadh Hardware Traders Account', 'email' => 'market_supplier18@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570018']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s18 = Supplier::create([
@@ -967,7 +967,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product90/600/600'
             ]);
             
-        $u = User::create(['name' => 'Ganga Hardware House Account', 'email' => 'supplier19@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570019']);
+        $u = User::create(['name' => 'Ganga Hardware House Account', 'email' => 'market_supplier19@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570019']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s19 = Supplier::create([
@@ -1020,7 +1020,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product95/600/600'
             ]);
             
-        $u = User::create(['name' => 'Glass Emporium Account', 'email' => 'supplier20@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570020']);
+        $u = User::create(['name' => 'Glass Emporium Account', 'email' => 'market_supplier20@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570020']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s20 = Supplier::create([
@@ -1073,7 +1073,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product100/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Sanitary World Account', 'email' => 'supplier21@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570021']);
+        $u = User::create(['name' => 'Bihar Sanitary World Account', 'email' => 'market_supplier21@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570021']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s21 = Supplier::create([
@@ -1126,7 +1126,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product105/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'supplier22@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570022']);
+        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'market_supplier22@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570022']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s22 = Supplier::create([
@@ -1179,7 +1179,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product110/600/600'
             ]);
             
-        $u = User::create(['name' => 'Patna Tiles Depot Account', 'email' => 'supplier23@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570023']);
+        $u = User::create(['name' => 'Patna Tiles Depot Account', 'email' => 'market_supplier23@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570023']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s23 = Supplier::create([
@@ -1232,7 +1232,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product115/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Aluminium Traders Account', 'email' => 'supplier24@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570024']);
+        $u = User::create(['name' => 'Magadh Aluminium Traders Account', 'email' => 'market_supplier24@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570024']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s24 = Supplier::create([
@@ -1285,7 +1285,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product120/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Glass Traders Account', 'email' => 'supplier25@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570025']);
+        $u = User::create(['name' => 'Magadh Glass Traders Account', 'email' => 'market_supplier25@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570025']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s25 = Supplier::create([
@@ -1338,7 +1338,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product125/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'supplier26@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570026']);
+        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'market_supplier26@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570026']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s26 = Supplier::create([
@@ -1391,7 +1391,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product130/600/600'
             ]);
             
-        $u = User::create(['name' => 'Ganga Furniture House Account', 'email' => 'supplier27@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570027']);
+        $u = User::create(['name' => 'Ganga Furniture House Account', 'email' => 'market_supplier27@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570027']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s27 = Supplier::create([
@@ -1444,7 +1444,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product135/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Sanitary World Account', 'email' => 'supplier28@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570028']);
+        $u = User::create(['name' => 'Bihar Sanitary World Account', 'email' => 'market_supplier28@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570028']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s28 = Supplier::create([
@@ -1497,7 +1497,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product140/600/600'
             ]);
             
-        $u = User::create(['name' => 'Patna Lighting Depot Account', 'email' => 'supplier29@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570029']);
+        $u = User::create(['name' => 'Patna Lighting Depot Account', 'email' => 'market_supplier29@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570029']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s29 = Supplier::create([
@@ -1550,7 +1550,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product145/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'supplier30@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570030']);
+        $u = User::create(['name' => 'Bihar Hardware World Account', 'email' => 'market_supplier30@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570030']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s30 = Supplier::create([
@@ -1603,7 +1603,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product150/600/600'
             ]);
             
-        $u = User::create(['name' => 'Patna Glass Depot Account', 'email' => 'supplier31@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570031']);
+        $u = User::create(['name' => 'Patna Glass Depot Account', 'email' => 'market_supplier31@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570031']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s31 = Supplier::create([
@@ -1656,7 +1656,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product155/600/600'
             ]);
             
-        $u = User::create(['name' => 'Lighting Emporium Account', 'email' => 'supplier32@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570032']);
+        $u = User::create(['name' => 'Lighting Emporium Account', 'email' => 'market_supplier32@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570032']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s32 = Supplier::create([
@@ -1709,7 +1709,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product160/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Tiles Traders Account', 'email' => 'supplier33@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570033']);
+        $u = User::create(['name' => 'Magadh Tiles Traders Account', 'email' => 'market_supplier33@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570033']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s33 = Supplier::create([
@@ -1762,7 +1762,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product165/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Tiles World Account', 'email' => 'supplier34@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570034']);
+        $u = User::create(['name' => 'Bihar Tiles World Account', 'email' => 'market_supplier34@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570034']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s34 = Supplier::create([
@@ -1815,7 +1815,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product170/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Granite Traders Account', 'email' => 'supplier35@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570035']);
+        $u = User::create(['name' => 'Magadh Granite Traders Account', 'email' => 'market_supplier35@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570035']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s35 = Supplier::create([
@@ -1868,7 +1868,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product175/600/600'
             ]);
             
-        $u = User::create(['name' => 'Ganga Furniture House Account', 'email' => 'supplier36@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570036']);
+        $u = User::create(['name' => 'Ganga Furniture House Account', 'email' => 'market_supplier36@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570036']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s36 = Supplier::create([
@@ -1921,7 +1921,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product180/600/600'
             ]);
             
-        $u = User::create(['name' => 'Bihar Granite World Account', 'email' => 'supplier37@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570037']);
+        $u = User::create(['name' => 'Bihar Granite World Account', 'email' => 'market_supplier37@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570037']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s37 = Supplier::create([
@@ -1974,7 +1974,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product185/600/600'
             ]);
             
-        $u = User::create(['name' => 'Patna Granite Depot Account', 'email' => 'supplier38@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570038']);
+        $u = User::create(['name' => 'Patna Granite Depot Account', 'email' => 'market_supplier38@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570038']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s38 = Supplier::create([
@@ -2027,7 +2027,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product190/600/600'
             ]);
             
-        $u = User::create(['name' => 'Magadh Tiles Traders Account', 'email' => 'supplier39@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570039']);
+        $u = User::create(['name' => 'Magadh Tiles Traders Account', 'email' => 'market_supplier39@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570039']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s39 = Supplier::create([
@@ -2080,7 +2080,7 @@ class SupplierSeeder extends Seeder {
                 'cover_image' => 'https://picsum.photos/seed/product195/600/600'
             ]);
             
-        $u = User::create(['name' => 'Granite Emporium Account', 'email' => 'supplier40@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570040']);
+        $u = User::create(['name' => 'Granite Emporium Account', 'email' => 'market_supplier40@example.com', 'password' => Hash::make('password'), 'verification_level' => 'business_verified', 'is_active' => true, 'phone' => '9876570040']);
         DB::table('user_roles')->insert(['user_id' => $u->id, 'role_id' => $sRoleId]);
         DB::table('wallets')->insert(['user_id' => $u->id, 'balance' => 5000]);
         $s40 = Supplier::create([

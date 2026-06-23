@@ -90,7 +90,7 @@ export function HomeownerDashboard({ data, fetchDashboard }: { data: any, fetchD
                               <p className="text-slate-600 text-sm line-clamp-2">{req.description}</p>
                             </div>
                             <div className="flex flex-col gap-2 shrink-0">
-                              <Button onClick={() => router.push(`/projects/${req.id}`)} variant="outline">View Detail</Button>
+                              <Button onClick={() => router.push(`/requirements/${req.id}`)} variant="outline">View Detail</Button>
                             </div>
                         </div>
                       ))}

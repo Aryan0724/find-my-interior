@@ -63,13 +63,9 @@ export default function ConversationPage() {
 
   const fetchConversationInfo = async () => {
     try {
-      // the index endpoint gives us conversations but there's no show endpoint for a specific conversation yet
-      // let's just get it from the index list for now
-      const res = await api.get("/conversations");
-      const list = res.data.data || res.data;
-      const conv = list.find((c: any) => c.id.toString() === params.id);
-      if (conv) {
-        setConversation(conv);
+      const res = await api.get(`/conversations/${params.id}`);
+      if (res.data) {
+        setConversation(res.data);
       }
     } catch (err) {
       console.error("Failed to load conversation details", err);

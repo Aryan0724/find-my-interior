@@ -8,16 +8,25 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropIndex(['reviewable_type', 'reviewable_id']);
-            $table->dropColumn(['user_id', 'reviewable_type', 'reviewable_id']);
-            
-            $table->foreignId('project_id')->nullable()->after('id')->constrained('projects')->cascadeOnDelete();
-            $table->foreignId('reviewer_id')->nullable()->after('project_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('reviewed_user_id')->nullable()->after('reviewer_id')->constrained('users')->cascadeOnDelete();
-            $table->string('role_of_reviewer')->nullable()->after('body'); // homeowner, professional
-        });
+        if (\Illuminate\Support\Facades\DB::connection()->getDriverName() !== 'sqlite') {
+            Schema::table('reviews', function (Blueprint $table) {
+                $table->dropForeign(['user_id']);
+                $table->dropIndex(['reviewable_type', 'reviewable_id']);
+                $table->dropColumn(['user_id', 'reviewable_type', 'reviewable_id']);
+                
+                $table->foreignId('project_id')->nullable()->after('id')->constrained('projects')->cascadeOnDelete();
+                $table->foreignId('reviewer_id')->nullable()->after('project_id')->constrained('users')->cascadeOnDelete();
+                $table->foreignId('reviewed_user_id')->nullable()->after('reviewer_id')->constrained('users')->cascadeOnDelete();
+                $table->string('role_of_reviewer')->nullable()->after('body'); // homeowner, professional
+            });
+        } else {
+            Schema::table('reviews', function (Blueprint $table) {
+                $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
+                $table->foreignId('reviewer_id')->nullable()->constrained('users')->cascadeOnDelete();
+                $table->foreignId('reviewed_user_id')->nullable()->constrained('users')->cascadeOnDelete();
+                $table->string('role_of_reviewer')->nullable(); // homeowner, professional
+            });
+        }
     }
 
     public function down(): void

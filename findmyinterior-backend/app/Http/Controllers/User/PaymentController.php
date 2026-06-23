@@ -28,7 +28,7 @@ class PaymentController extends Controller
             'purpose'               => ['required', 'in:subscription,lead_unlock'],
             'subscription_plan_id'  => ['required_if:purpose,subscription', 'exists:subscription_plans,id'],
             'billing_cycle'         => ['required_if:purpose,subscription', 'in:monthly,yearly'],
-            'requirement_id'        => ['required_if:purpose,lead_unlock', 'exists:requirements,id'],
+            'requirement_id'        => ['required_if:purpose,lead_unlock', 'exists:projects,id'],
         ]);
 
         $user = $request->user();

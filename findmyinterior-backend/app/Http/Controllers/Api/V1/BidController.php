@@ -28,7 +28,7 @@ class BidController extends Controller
         }
 
         $validated = $request->validate([
-            'requirement_id' => 'required|exists:requirements,id',
+            'requirement_id' => 'required|exists:projects,id',
             'estimated_cost' => 'required|numeric|min:0',
             'timeline_days' => 'required|integer|min:1',
             'warranty_months' => 'nullable|integer|min:0',

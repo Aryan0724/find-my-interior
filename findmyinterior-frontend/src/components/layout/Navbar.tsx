@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { 
   MapPin, 
@@ -33,6 +35,17 @@ import { NotificationDropdown } from "./NotificationDropdown";
 export function Navbar() {
   const { user, logout } = useAuthStore();
   const isAuthenticated = !!user;
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/professionals?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push("/professionals");
+    }
+  };
 
   return (
     <div className="w-full flex flex-col font-sans">
@@ -81,37 +94,39 @@ export function Navbar() {
         <div className="container mx-auto flex items-center justify-between gap-4">
           
           {/* Logo */}
-          <Link href="/" className="flex flex-col flex-shrink-0">
-            <div className="flex items-center text-[#0a1c3a] font-bold text-2xl tracking-tight">
-              <span className="text-[#E8701A] mr-1 text-3xl">⌂</span>
+          <Link href="/" className="flex flex-col flex-shrink-0 group">
+            <div className="flex items-center text-[#0a1c3a] font-black text-2xl tracking-tighter">
+              <span className="text-[#E8701A] mr-1.5 text-3xl transform transition-transform group-hover:scale-110 duration-300">⌂</span>
               FIND MY INTERIOR
             </div>
-            <div className="text-[0.65rem] tracking-[0.2em] text-gray-500 font-medium mt-0.5">
+            <div className="text-[0.65rem] tracking-[0.25em] text-gray-500 font-bold mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
               DREAM • DESIGN • DELIVER
             </div>
           </Link>
 
           {/* Center Search Container */}
-          <div className="hidden lg:flex flex-1 max-w-2xl items-center bg-gray-50 border border-gray-200 rounded-md p-1">
-            <div className="flex items-center px-3 border-r border-gray-300 min-w-[120px] cursor-pointer">
-              <MapPin className="w-4 h-4 text-gray-500 mr-2" />
-              <span className="text-sm text-gray-700">Patna</span>
+          <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-2xl items-center bg-gray-50/80 backdrop-blur-sm border border-gray-200 rounded-xl p-1.5 shadow-inner transition-all duration-300 focus-within:bg-white focus-within:shadow-md focus-within:border-orange-200">
+            <div className="flex items-center px-4 border-r border-gray-300 min-w-[130px] cursor-pointer hover:bg-gray-100/50 rounded-l-lg transition-colors py-1">
+              <MapPin className="w-4 h-4 text-[#E8701A] mr-2" />
+              <span className="text-sm font-semibold text-gray-700">Patna</span>
               <ChevronDown className="w-4 h-4 text-gray-400 ml-auto" />
             </div>
-            <div className="flex-1 px-3">
+            <div className="flex-1 px-4">
               <input 
                 type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search services, professionals, projects, suppliers..." 
-                className="w-full bg-transparent text-sm outline-none text-gray-700 placeholder:text-gray-400"
+                className="w-full bg-transparent text-sm font-medium outline-none text-gray-800 placeholder:text-gray-400 placeholder:font-normal"
               />
             </div>
-            <div className="flex items-center px-3 border-l border-gray-300 min-w-[140px] cursor-pointer bg-[#0a1c3a] text-white rounded-r-md">
-              <Link href="/professionals" className="flex items-center w-full py-1.5 px-2">
+            <button type="submit" className="flex items-center px-4 border-l border-transparent min-w-[120px] cursor-pointer bg-gradient-to-r from-[#0a1c3a] to-[#1a2c4a] hover:from-[#E8701A] hover:to-[#c25a12] text-white rounded-lg py-2 transition-all duration-300 transform shadow-sm hover:shadow-md">
+              <div className="flex items-center justify-center w-full">
                 <Search className="w-4 h-4 mr-2" />
-                <span className="text-sm font-semibold">Search</span>
-              </Link>
-            </div>
-          </div>
+                <span className="text-sm font-bold tracking-wide">SEARCH</span>
+              </div>
+            </button>
+          </form>
 
           {/* Right Action Buttons */}
           <div className="hidden xl:flex items-center space-x-3">
@@ -125,17 +140,17 @@ export function Navbar() {
             <div className="w-px h-6 bg-gray-200 mx-2"></div>
             
             <Link href={isAuthenticated ? "/dashboard?tab=bids_received" : "/post-requirement"}>
-              <button className="bg-[#0a1c3a] hover:bg-[#0a1c3a]/90 text-white text-sm font-semibold px-5 py-2 rounded shadow-sm transition-all h-full flex items-center justify-center">
+              <button className="bg-white border-2 border-[#0a1c3a] text-[#0a1c3a] hover:bg-[#0a1c3a] hover:text-white text-sm font-bold px-5 py-2.5 rounded-lg shadow-sm transition-all h-full flex items-center justify-center">
                 COMPARE BIDS
               </button>
             </Link>
             
             <Link href="/post-requirement">
-              <button className="bg-[#E8701A] hover:bg-[#E8701A]/90 text-white flex items-center px-4 py-2 rounded shadow-sm transition-all h-full">
-                <ClipboardList className="w-4 h-4 mr-2" />
+              <button className="bg-gradient-to-r from-[#E8701A] to-[#f08535] hover:from-[#c25a12] hover:to-[#E8701A] text-white flex items-center px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 h-full">
+                <ClipboardList className="w-5 h-5 mr-2.5" />
                 <div className="flex flex-col text-left">
-                  <span className="text-sm font-semibold leading-tight">Post Your Requirement</span>
-                  <span className="text-[0.65rem] leading-tight text-white/90">Get Multiple Quotes</span>
+                  <span className="text-sm font-bold leading-tight tracking-wide">Post Requirement</span>
+                  <span className="text-[0.65rem] leading-tight text-white/90 font-medium">Get Multiple Quotes</span>
                 </div>
               </button>
             </Link>

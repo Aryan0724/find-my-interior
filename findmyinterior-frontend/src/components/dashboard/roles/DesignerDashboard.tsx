@@ -92,8 +92,6 @@ export function DesignerDashboard({ data, fetchDashboard }: { data: any, fetchDa
                 {renderSidebarButton("unlocked_leads", <User className="h-5 w-5" />, "Unlocked Contacts")}
                 {renderSidebarButton("bids_submitted", <Gavel className="h-5 w-5" />, "Submitted Bids")}
                 {renderSidebarButton("won_projects", <Trophy className="h-5 w-5" />, "Won Projects")}
-                {renderSidebarButton("material_requests", <Truck className="h-5 w-5" />, "Material Requests")}
-                {renderSidebarButton("labour_requests", <HardHat className="h-5 w-5" />, "Labour Requests")}
                 {renderSidebarButton("messages", <MessageSquare className="h-5 w-5" />, "Messages")}
                 {renderSidebarButton("wallet", <Wallet className="h-5 w-5" />, "Wallet")}
                 {renderSidebarButton("profile", <User className="h-5 w-5" />, "Portfolio")}
@@ -143,15 +141,6 @@ export function DesignerDashboard({ data, fetchDashboard }: { data: any, fetchDa
             {activeTab === 'wallet' && <WalletTab />}
 
             {activeTab === 'profile' && <ProfileTab />}
-
-            {['material_requests', 'labour_requests'].includes(activeTab) && (
-              <Card>
-                <CardContent className="py-16 text-center text-slate-500">
-                  <Truck className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                  No requests found in this category. You can post a new RFQ from your dashboard.
-                </CardContent>
-              </Card>
-            )}
 
             {activeTab === 'messages' && (
               <Card>

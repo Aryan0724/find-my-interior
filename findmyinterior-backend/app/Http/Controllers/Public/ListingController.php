@@ -49,7 +49,7 @@ class ListingController extends Controller
             'newest'  => $query->orderByDesc('created_at'),
             'popular' => $query->orderByDesc('views_count'),
             default   => $query
-                ->orderByRaw('CASE WHEN sponsored_until > NOW() THEN 1 ELSE 0 END DESC')
+                ->orderByRaw('CASE WHEN sponsored_until > CURRENT_TIMESTAMP THEN 1 ELSE 0 END DESC')
                 ->orderByDesc('sponsored_rank')
                 ->orderByDesc('is_featured')
                 ->orderByDesc('is_premium')

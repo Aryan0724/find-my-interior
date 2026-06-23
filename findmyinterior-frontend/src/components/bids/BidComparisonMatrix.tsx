@@ -1,9 +1,20 @@
 "use client";
 
-import { CheckCircle2, Award, XCircle, IndianRupee } from "lucide-react";
+import { CheckCircle2, Award, XCircle, IndianRupee, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export function BidComparisonMatrix({ bids, onAward }: { bids: any[], onAward: (bidId: number) => void }) {
+  const router = useRouter();
+  
+  const handleMessageVendor = async (vendorId: number) => {
+    try {
+      const res = await api.post(`/requirements/${bids[0].requirement_id}/conversations`, { vendor_id: vendorId });
+      router.push(`/messages/${res.data.id}`);
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Failed to start conversation.");
+    }
+  };
   if (!bids || bids.length === 0) {
     return <div className="p-4 text-center text-slate-500">No bids to compare yet.</div>;
   }
@@ -111,12 +122,15 @@ export function BidComparisonMatrix({ bids, onAward }: { bids: any[], onAward: (
                 </div>
               </div>
 
-              <div className="p-4 bg-slate-50 border-t border-slate-200 mt-auto">
+              <div className="p-4 bg-slate-50 border-t border-slate-200 mt-auto flex flex-col gap-2">
                 <Button 
                   onClick={() => onAward(bid.id)}
                   className={`w-full ${isRecommended ? 'bg-[#E8701A] hover:bg-[#E8701A]/90' : 'bg-[#0a1c3a] hover:bg-[#0a1c3a]/90'} text-white font-bold`}
                 >
                   Award to {professional?.name?.split(' ')[0] || 'Vendor'}
+                </Button>
+                <Button variant="outline" onClick={() => handleMessageVendor(bid.vendor_id)}>
+                  <MessageSquare className="w-4 h-4 mr-2" /> Message
                 </Button>
               </div>
             </div>

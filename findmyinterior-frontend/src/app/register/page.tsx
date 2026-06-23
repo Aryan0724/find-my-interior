@@ -58,7 +58,7 @@ export default function RegisterPage() {
             Join FindMyInterior as a homeowner or a business professional.
           </CardDescription>
         </CardHeader>
-        <div className="space-y-4 pt-6">
+        <form onSubmit={handleRegister} className="space-y-4 pt-6">
           <CardContent className="space-y-4">
             {error && <div className="p-3 bg-red-50 text-red-600 text-sm rounded-md">{error}</div>}
             
@@ -105,7 +105,7 @@ export default function RegisterPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="button" onClick={handleRegister} className="w-full bg-orange-600 hover:bg-orange-700" disabled={loading}>
+            <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700" disabled={loading}>
               {loading ? "Creating account..." : "Register"}
             </Button>
             <div className="text-center text-sm text-slate-500">
@@ -115,7 +115,7 @@ export default function RegisterPage() {
               </Link>
             </div>
           </CardFooter>
-        </div>
+        </form>
       </Card>
     </div>
   );

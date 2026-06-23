@@ -9,8 +9,9 @@ class RequirementResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $user = $request->user();
+        $user = $request->user('sanctum');
         $canSeeContact = $user && (
+            $user->id === $this->user_id ||
             $user->isAdmin() || 
             $user->hasPremiumSubscription() || 
             $user->hasUnlockedRequirement($this->id)

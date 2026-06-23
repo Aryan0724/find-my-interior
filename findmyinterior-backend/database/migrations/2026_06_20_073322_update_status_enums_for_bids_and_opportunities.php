@@ -12,21 +12,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('requirements', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
-        
-        Schema::table('requirements', function (Blueprint $table) {
-            $table->string('status', 50)->default('published');
-        });
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            Schema::table('requirements', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
+            
+            Schema::table('requirements', function (Blueprint $table) {
+                $table->string('status', 50)->default('published');
+            });
 
-        Schema::table('bids', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
-        
-        Schema::table('bids', function (Blueprint $table) {
-            $table->string('status', 50)->default('submitted');
-        });
+            Schema::table('bids', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
+            
+            Schema::table('bids', function (Blueprint $table) {
+                $table->string('status', 50)->default('submitted');
+            });
+        }
     }
 
     /**

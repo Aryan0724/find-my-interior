@@ -123,7 +123,9 @@ export default function PostRequirementPage() {
       if (oppDef.type === 'worker-jobs') endpoint = `/worker-jobs`;
 
       await api.post(endpoint, payload);
-      setSuccess(true);
+      const oppDefSearch = OPPORTUNITY_TYPES.find(t => t.id === selectedType);
+      router.push(`/professionals?search=${encodeURIComponent(oppDefSearch?.label || '')}`);
+
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to post opportunity");
     } finally {
@@ -134,23 +136,7 @@ export default function PostRequirementPage() {
   if (!mounted) return null;
 
   if (success) {
-    return (
-      <div className="container mx-auto px-4 py-20 flex justify-center items-center min-h-[70vh]">
-        <Card className="w-full max-w-md text-center py-12">
-          <CardHeader>
-            <CardTitle className="text-2xl text-green-600">Opportunity Posted!</CardTitle>
-            <CardDescription>
-              Your request has been broadcast securely to the right professionals.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="justify-center">
-            <Button onClick={() => router.push("/dashboard")} className="bg-orange-600 hover:bg-orange-700">
-              Go to Dashboard
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
-    );
+    return null; // Should not reach here
   }
 
   return (

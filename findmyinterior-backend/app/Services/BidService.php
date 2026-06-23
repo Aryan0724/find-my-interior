@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Bid;
 use App\Models\Requirement;
 use App\Models\User;
+use App\Models\Project;
 use App\Notifications\BidReceivedNotification;
 use App\Notifications\BidAwardedNotification;
 use Illuminate\Support\Facades\DB;

@@ -96,4 +96,25 @@ class ConversationController extends Controller
         
         return response()->json($conversation->load(['customer', 'vendor']), 201);
     }
+
+    /**
+     * Get a specific conversation.
+     */
+    public function show(Request $request, $id)
+    {
+        $user = $request->user();
+        
+        $conversation = Conversation::with([
+            'conversationable', 
+            'customer', 
+            'vendor'
+        ])
+        ->where(function($q) use ($user) {
+            $q->where('customer_id', $user->id)
+              ->orWhere('vendor_id', $user->id);
+        })
+        ->findOrFail($id);
+            
+        return response()->json($conversation);
+    }
 }

@@ -55,15 +55,23 @@ class Review extends Model
         // After a review is approved/created, recalculate the parent's rating
         static::saved(function (Review $review) {
             if ($review->is_approved) {
-                $parent = $review->reviewable;
-                if (method_exists($parent, 'recalculateRating')) {
+                // Support both old morph and new relation
+                $parent = null;
+                if (method_exists($review, 'reviewedUser') && $review->reviewedUser) {
+                    $parent = $review->reviewedUser;
+                }
+                
+                if ($parent && method_exists($parent, 'recalculateRating')) {
                     $parent->recalculateRating();
                 }
             }
         });
 
         static::deleted(function (Review $review) {
-            $parent = $review->reviewable;
+            $parent = null;
+            if (method_exists($review, 'reviewedUser') && $review->reviewedUser) {
+                $parent = $review->reviewedUser;
+            }
             if ($parent && method_exists($parent, 'recalculateRating')) {
                 $parent->recalculateRating();
             }

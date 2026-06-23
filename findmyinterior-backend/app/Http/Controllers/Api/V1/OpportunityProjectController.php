@@ -32,22 +32,31 @@ class OpportunityProjectController extends Controller
         // Get target roles from OpportunityType
         $oppType = OpportunityType::where('type', $validated['requirement_type'])->first();
 
+        $user = Auth::user();
+        $creatorRole = 'homeowner';
+        if ($user && $user->roles()->exists()) {
+            $firstRole = $user->roles()->first();
+            if ($firstRole) {
+                $creatorRole = $firstRole->slug;
+            }
+        }
+
         $project = Project::create([
-            'user_id' => Auth::id() ?? 1, // fallback for testing
+            'user_id' => $user ? $user->id : 1, // fallback for testing
             'category_id' => 1, // Default to 1 (Interior Designers) to satisfy DB constraint
             'title' => $validated['title'],
             'description' => $validated['description'],
             'city' => $validated['city'],
             'district' => $validated['district'],
             'project_type' => $validated['project_category'] ?? 'general', // Satisfy DB constraint
-            'name' => Auth::check() ? Auth::user()->name : 'Guest User', // Satisfy DB constraint
-            'phone' => Auth::check() ? (Auth::user()->phone ?? '0000000000') : '0000000000', // Satisfy DB constraint
+            'name' => $user ? $user->name : 'Guest User', // Satisfy DB constraint
+            'phone' => $user ? ($user->phone ?? '0000000000') : '0000000000', // Satisfy DB constraint
             'opportunity_type' => $validated['opportunity_type'],
             'requirement_type' => $validated['requirement_type'],
             'project_category' => $validated['project_category'] ?? null,
             'budget_min' => $validated['budget_min'] ?? null,
             'budget_max' => $validated['budget_max'] ?? null,
-            'creator_role' => Auth::check() ? Auth::user()->roles->first()->slug ?? 'homeowner' : 'homeowner',
+            'creator_role' => $creatorRole,
             'target_roles' => $oppType ? $oppType->target_roles : ['interior_designer', 'contractor', 'builder'], // Default targets if missing
             'status' => 'open'
         ]);

@@ -18,7 +18,7 @@ class BidController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'requirement_id' => 'required|exists:requirements,id',
+            'requirement_id' => 'required|exists:projects,id',
             'amount' => 'required|numeric|min:1',
             'proposal_message' => 'required|string|max:2000',
             'timeline_days' => 'required|integer|min:1',

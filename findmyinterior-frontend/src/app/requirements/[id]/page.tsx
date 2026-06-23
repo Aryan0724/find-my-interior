@@ -24,6 +24,7 @@ export default function RequirementDetail() {
   const [loading, setLoading] = useState(true);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // Modals
   const [showBidForm, setShowBidForm] = useState(false);
@@ -199,28 +200,66 @@ export default function RequirementDetail() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Photo Gallery */}
                 <div className="relative rounded-xl overflow-hidden aspect-[4/3] bg-slate-100 group">
-                  <img 
-                    src={requirement.images?.[0] || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800"} 
-                    alt="Project" 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/10"></div>
-                  <button className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                    <ChevronLeft className="w-5 h-5 text-slate-800" />
-                  </button>
-                  <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                    <ChevronRight className="w-5 h-5 text-slate-800" />
-                  </button>
-                  <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-2 backdrop-blur-sm">
-                    <ImageIcon className="w-4 h-4" />
-                    View Photos (8)
-                  </div>
-                  <div className="absolute bottom-3 right-3 flex gap-1">
-                    <div className="w-2 h-2 rounded-full bg-white"></div>
-                    <div className="w-2 h-2 rounded-full bg-white/50"></div>
-                    <div className="w-2 h-2 rounded-full bg-white/50"></div>
-                    <div className="w-2 h-2 rounded-full bg-white/50"></div>
-                  </div>
+                  {(() => {
+                    const hasImages = requirement.images && requirement.images.length > 0;
+                    const displayImages = hasImages 
+                      ? requirement.images.map((img: any) => img.image_url || img)
+                      : ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800", "https://images.unsplash.com/photo-1600607687931-cecebd803518?q=80&w=800", "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800"];
+                    const showNav = displayImages.length > 1;
+                    const safeIndex = currentImageIndex >= displayImages.length ? 0 : currentImageIndex;
+                    
+                    return (
+                      <>
+                        <img 
+                          src={displayImages[safeIndex]}
+                          alt="Project" 
+                          className="w-full h-full object-cover transition-opacity duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
+                        
+                        {showNav && (
+                          <>
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentImageIndex(prev => prev === 0 ? displayImages.length - 1 : prev - 1);
+                              }}
+                              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10"
+                            >
+                              <ChevronLeft className="w-5 h-5 text-slate-800" />
+                            </button>
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentImageIndex(prev => prev === displayImages.length - 1 ? 0 : prev + 1);
+                              }}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10"
+                            >
+                              <ChevronRight className="w-5 h-5 text-slate-800" />
+                            </button>
+                            <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-2 backdrop-blur-sm z-10">
+                              <ImageIcon className="w-4 h-4" />
+                              View Photos ({displayImages.length})
+                            </div>
+                            <div className="absolute bottom-3 right-3 flex gap-1.5 z-10">
+                              {displayImages.map((_, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setCurrentImageIndex(idx);
+                                  }}
+                                  className={`w-2 h-2 rounded-full transition-all ${
+                                    idx === safeIndex ? "bg-white scale-125" : "bg-white/50 hover:bg-white/80"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* Project Details List */}
@@ -400,7 +439,14 @@ export default function RequirementDetail() {
                           Unlock & connect directly with the client to discuss the project.
                         </p>
                         <Button 
-                          onClick={() => router.push("/messages")}
+                          onClick={async () => {
+                            try {
+                              const res = await api.post(`/requirements/${requirement.id}/conversations`);
+                              router.push(`/messages/${res.data.id}`);
+                            } catch (err: any) {
+                              alert(err.response?.data?.message || "Failed to start conversation.");
+                            }
+                          }}
                           className="w-full bg-[#0b1b36] hover:bg-slate-800 text-white font-bold h-12 text-base rounded-md flex gap-2 shadow-md"
                         >
                           <MessageCircle className="w-5 h-5" /> Message Client

@@ -7,6 +7,13 @@ import { TrustFooter } from "@/components/home/TrustFooter";
 import { FeaturedProfessionals } from "@/components/home/FeaturedProfessionals";
 import { MobileStickyCTA } from "@/components/home/MobileStickyCTA";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Find & Hire The Best Interior Experts, Contractors, and Suppliers in Bihar. Compare quotes and save up to 30% on your next home project.",
+};
+
 export default function Home() {
   return (
     <div className="flex flex-col w-full overflow-hidden bg-white relative pb-16 md:pb-0">
