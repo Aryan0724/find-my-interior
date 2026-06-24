@@ -42,6 +42,11 @@ export default function ConversationPage() {
   const params = useParams();
   const router = useRouter();
   const { user, token } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -75,18 +80,20 @@ export default function ConversationPage() {
   };
 
   useEffect(() => {
-    if (!token) {
+    if (mounted && !token) {
       router.push("/login");
       return;
     }
     
-    fetchConversationInfo();
-    fetchMessages();
+    if (token) {
+      fetchConversationInfo();
+      fetchMessages();
 
-    // 5-second polling
-    pollingInterval.current = setInterval(() => {
-      fetchMessages(true);
-    }, 5000);
+      // 5-second polling
+      pollingInterval.current = setInterval(() => {
+        fetchMessages(true);
+      }, 5000);
+    }
 
     return () => {
       if (pollingInterval.current) clearInterval(pollingInterval.current);
@@ -95,7 +102,10 @@ export default function ConversationPage() {
 
   // Auto-scroll
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = document.getElementById("chat-scroll-container");
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   }, [messages]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -189,7 +199,7 @@ export default function ConversationPage() {
         )}
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto bg-slate-50/50 p-4">
+      <div id="chat-scroll-container" className="flex-1 overflow-y-auto bg-slate-50/50 p-4">
         <div className="container mx-auto max-w-4xl flex flex-col space-y-4">
           {messages.length === 0 ? (
             <div className="text-center text-slate-500 py-10 my-auto">
@@ -200,7 +210,7 @@ export default function ConversationPage() {
             </div>
           ) : (
             messages.map((msg) => {
-              const isMe = msg.sender_id === user.id;
+              const isMe = Number(msg.sender_id) === Number(user.id);
               return (
                 <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${isMe ? 'bg-orange-600 text-white rounded-tr-sm' : 'bg-white border text-slate-800 rounded-tl-sm'}`}>
