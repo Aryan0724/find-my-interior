@@ -11,7 +11,7 @@ import { WalletTab } from "@/components/dashboard/WalletTab";
 import { ProfileTab } from "@/components/dashboard/ProfileTab";
 import { AvailableLeadsTab } from "@/components/dashboard/AvailableLeadsTab";
 import { MyBidsTab } from "@/components/dashboard/MyBidsTab";
-import { MessagesTab } from "@/components/dashboard/MessagesTab";
+
 import { VerificationTab } from "@/components/dashboard/VerificationTab";
 import Link from "next/link";
 
