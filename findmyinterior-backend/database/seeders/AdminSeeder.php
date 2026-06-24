@@ -29,11 +29,11 @@ class AdminSeeder extends Seeder
 
         // 2. Create Admin
         $user = User::firstOrCreate(
-            ['email' => 'admin@findmyinterior.com'],
+            ['email' => 'Aryantiwari@findmyinterior.com'],
             [
                 'name' => 'FindMyInterior Admin',
                 'phone' => '9999999999',
-                'password' => Hash::make('Admin@123456'),
+                'password' => Hash::make('findmyinterior'),
                 'verification_level' => 'site_verified',
                 'is_active' => true,
                 'email_verified_at' => now(),
