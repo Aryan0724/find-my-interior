@@ -84,7 +84,7 @@ export function AdvancedBidForm({ requirementId, onSuccess }: { requirementId: n
       };
 
       const bidResponse = await api.post("/bids", bidPayload);
-      const bidId = bidResponse.data.data.id;
+      const bidId = bidResponse.data?.bid?.id;
 
       // Upload portfolio files if provided - Removed since backend doesn't support bid attachments yet
 
