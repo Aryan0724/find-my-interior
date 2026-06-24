@@ -10,6 +10,9 @@ type User = {
   roles?: any[];
   avatar: string | null;
   subscription: any | null;
+  verification_level?: string;
+  trust_score?: number;
+  profile_completion_score?: number;
 };
 
 interface AuthState {
