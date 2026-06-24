@@ -18,7 +18,12 @@ import Link from "next/link";
 export function BuilderDashboard({ data, fetchDashboard }: { data: any, fetchDashboard: () => void }) {
   const router = useRouter();
   const { user, logout } = useAuthStore();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState(() => {
+    if (user && !["verified_business", "trusted_professional", "elite_professional", "site_verified"].includes(user.verification_level)) {
+      return "verification";
+    }
+    return "overview";
+  });
 
   const handleLogout = () => {
     logout();
