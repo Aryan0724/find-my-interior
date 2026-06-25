@@ -12,7 +12,7 @@ import { AvailableLeadsTab } from "@/components/dashboard/AvailableLeadsTab";
 import { MyBidsTab } from "@/components/dashboard/MyBidsTab";
 import { UnlockedLeadsTab } from "@/components/dashboard/UnlockedLeadsTab";
 import { VerificationTab } from "@/components/dashboard/VerificationTab";
-
+import { UnverifiedBanner } from "@/components/dashboard/UnverifiedBanner";
 export function WorkerDashboard({ data, fetchDashboard }: { data: any, fetchDashboard: () => void }) {
   const router = useRouter();
   const { user, logout } = useAuthStore();
