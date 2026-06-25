@@ -19,9 +19,9 @@ export function UnverifiedBanner({ onVerifyClick }: { onVerifyClick: () => void 
       <div className="flex items-center gap-3">
         <AlertTriangle className="h-5 w-5 text-red-600" />
         <div>
-          <AlertTitle className="font-bold text-red-800">Action Required: Business Verification</AlertTitle>
+          <AlertTitle className="font-bold text-red-800">Boost Your Profile: Business Verification</AlertTitle>
           <AlertDescription className="text-red-700">
-            Your profile is currently unverified. You must complete the verification process to rank higher, get a verification badge, and unlock full access to leads.
+            Your profile is currently unverified. While you have full access to all features, verifying your business will give you a Trust Badge and significantly boost your ranking in search results!
           </AlertDescription>
         </div>
       </div>
