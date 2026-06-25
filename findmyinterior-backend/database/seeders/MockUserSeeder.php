@@ -316,15 +316,12 @@ class MockUserSeeder extends Seeder
                 'phone'            => $user->phone,
                 'city'             => $city,
                 'district'         => $this->randomDistrict(),
-                'state'            => 'Bihar',
-                'years_experience' => rand(1, 12),
+                'experience_years' => rand(1, 12),
                 'daily_rate'       => $dailyRates[array_rand($dailyRates)],
                 'is_available'     => (bool) rand(0, 1),
-                'description'      => "Experienced {$skill} based in {$city}, Bihar. Available for residential and commercial projects. {$nameData['first']} brings {$skill} expertise with a commitment to quality and punctuality.",
-                'cover_image'      => "https://picsum.photos/seed/{$seed}/800/400",
+                'bio'              => "Experienced {$skill} based in {$city}, Bihar. Available for residential and commercial projects. {$nameData['first']} brings {$skill} expertise with a commitment to quality and punctuality.",
                 'status'           => 'active',
                 'is_verified'      => $isVerified,
-                'views_count'      => rand(10, 500),
             ]);
 
             $this->generateReviews(Worker::class, $worker->id, rand(2, 4));
@@ -368,20 +365,16 @@ class MockUserSeeder extends Seeder
             $businessName = $nameData['name'] . ' ' . $material . ' Suppliers';
             $supplier = Supplier::create([
                 'user_id'      => $user->id,
-                'name'         => $businessName,
+                'company_name' => $businessName,
                 'slug'         => Str::slug($businessName . '-' . $city) . '-' . Str::random(4),
                 'tagline'      => $this->supplierTaglines[array_rand($this->supplierTaglines)],
-                'description'  => "Leading supplier of {$material} in {$city} and surrounding areas. We offer competitive wholesale prices, bulk discounts, and timely delivery across Bihar. {$nameData['name']} has been serving contractors and builders for over 8 years.",
                 'phone'        => $user->phone,
                 'email'        => $user->email,
                 'city'         => $city,
                 'district'     => $this->randomDistrict(),
-                'state'        => 'Bihar',
-                'address'      => 'Warehouse No. ' . rand(1, 50) . ', Industrial Area, ' . $city,
                 'cover_image'  => "https://picsum.photos/seed/{$seed}/800/400",
                 'status'       => 'active',
                 'is_verified'  => $isVerified,
-                'views_count'  => rand(50, 3000),
             ]);
 
             $this->generateReviews(Supplier::class, $supplier->id, rand(2, 4));
@@ -420,23 +413,18 @@ class MockUserSeeder extends Seeder
 
             $companyName = $nameData['name'] . ' Builders & Developers';
             $builder = Builder::create([
-                'user_id'               => $user->id,
-                'name'                  => $companyName,
-                'slug'                  => Str::slug($companyName . '-' . $city) . '-' . Str::random(4),
-                'tagline'               => $this->builderTaglines[array_rand($this->builderTaglines)],
-                'description'           => "Established builder and real estate developer based in {$city}, Bihar. Specializing in {$projType} with a portfolio of 20+ completed projects. RERA registered with a commitment to quality construction and timely possession.",
-                'phone'                 => $user->phone,
-                'email'                 => $user->email,
-                'city'                  => $city,
-                'district'              => $this->randomDistrict(),
-                'state'                 => 'Bihar',
-                'address'               => 'Office No. ' . rand(1, 20) . ', Business Center, ' . $city,
-                'cover_image'           => "https://picsum.photos/seed/{$seed}/800/400",
-                'status'                => 'active',
-                'is_verified'           => true,
-                'total_projects_count'  => rand(5, 50),
-                'ongoing_projects_count'=> rand(1, 10),
-                'views_count'           => rand(100, 5000),
+                'user_id'                => $user->id,
+                'company_name'           => $companyName,
+                'slug'                   => Str::slug($companyName . '-' . $city) . '-' . Str::random(4),
+                'tagline'                => $this->builderTaglines[array_rand($this->builderTaglines)],
+                'phone'                  => $user->phone,
+                'email'                  => $user->email,
+                'city'                   => $city,
+                'district'               => $this->randomDistrict(),
+                'cover_image'            => "https://picsum.photos/seed/{$seed}/800/400",
+                'status'                 => 'active',
+                'is_verified'            => true,
+                'total_projects'         => rand(5, 50),
             ]);
 
             $this->generateReviews(Builder::class, $builder->id, rand(3, 6));
