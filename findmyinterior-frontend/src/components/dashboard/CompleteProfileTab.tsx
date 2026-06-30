@@ -62,11 +62,12 @@ function AvatarUploader({ currentAvatar, userName }: { currentAvatar: string | n
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative group">
-        <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-orange-100 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 font-bold text-2xl shadow-md">
-          {preview ? (
-            <img src={preview} alt={userName} className="w-full h-full object-cover" />
-          ) : (
-            initials || <User className="w-10 h-10" />
+        <div className="w-24 h-24 relative rounded-full overflow-hidden ring-4 ring-orange-100 bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center text-orange-700 font-bold text-2xl shadow-md">
+          <div className="absolute inset-0 z-0 flex items-center justify-center">
+            {initials || <User className="w-10 h-10" />}
+          </div>
+          {preview && (
+            <img src={preview} alt="Avatar" className="w-full h-full object-cover absolute inset-0 z-10 text-transparent" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           )}
         </div>
         <button
