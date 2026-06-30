@@ -24,7 +24,7 @@ import {
   XCircle,
 } from "lucide-react";
 
-type AdminTab = "overview" | "verifications" | "users" | "requirements" | "reviews" | "payments" | "database" | "subscriptions" | "categories" | "cms" | "inquiries";
+type AdminTab = "overview" | "verifications" | "users" | "listings" | "requirements" | "reviews" | "payments" | "database" | "subscriptions" | "categories" | "cms" | "inquiries";
 
 const tabs: { id: AdminTab; label: string }[] = [
   { id: "overview", label: "Overview" },
