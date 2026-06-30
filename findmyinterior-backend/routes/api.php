@@ -103,11 +103,10 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
     // Opportunity Backend Configuration
     Route::get('opportunities/config', [\App\Http\Controllers\Public\OpportunityConfigController::class, '__invoke']);
 
-    // Opportunity Entity API Contracts (Sprint A)
-    Route::apiResource('projects', OpportunityProjectController::class);
-    Route::apiResource('rfqs', RfqController::class);
-    Route::apiResource('worker-jobs', JobController::class);
-
+    // Opportunity Entity API Contracts (Sprint A) - Public Read
+    Route::apiResource('projects', OpportunityProjectController::class)->only(['index', 'show']);
+    Route::apiResource('rfqs', RfqController::class)->only(['index', 'show']);
+    Route::apiResource('worker-jobs', JobController::class)->only(['index', 'show']);
     
     // Legacy Requirements (Masked for guests/free users, unmasked for premium/admin via Resource logic)
     Route::apiResource('requirements', RequirementController::class)->only(['index', 'show']);
