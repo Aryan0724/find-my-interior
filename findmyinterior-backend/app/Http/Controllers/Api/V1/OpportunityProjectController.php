@@ -33,8 +33,12 @@ class OpportunityProjectController extends Controller
         $oppType = OpportunityType::where('type', $validated['requirement_type'])->first();
 
         $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
         $creatorRole = 'homeowner';
-        if ($user && $user->roles()->exists()) {
+        if ($user->roles()->exists()) {
             $firstRole = $user->roles()->first();
             if ($firstRole) {
                 $creatorRole = $firstRole->slug;
@@ -42,15 +46,15 @@ class OpportunityProjectController extends Controller
         }
 
         $project = Project::create([
-            'user_id' => $user ? $user->id : 1, // fallback for testing
+            'user_id' => $user->id,
             'category_id' => 1, // Default to 1 (Interior Designers) to satisfy DB constraint
             'title' => $validated['title'],
             'description' => $validated['description'],
             'city' => $validated['city'],
             'district' => $validated['district'],
             'project_type' => $validated['project_category'] ?? 'general', // Satisfy DB constraint
-            'name' => $user ? $user->name : 'Guest User', // Satisfy DB constraint
-            'phone' => $user ? ($user->phone ?? '0000000000') : '0000000000', // Satisfy DB constraint
+            'name' => $user->name,
+            'phone' => $user->phone ?? '0000000000',
             'opportunity_type' => $validated['opportunity_type'],
             'requirement_type' => $validated['requirement_type'],
             'project_category' => $validated['project_category'] ?? null,

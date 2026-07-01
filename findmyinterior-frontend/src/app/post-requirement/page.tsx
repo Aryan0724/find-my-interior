@@ -153,14 +153,9 @@ export default function PostRequirementPage() {
         formDataPayload.append('image', imageFile);
       }
 
-      await api.post(endpoint, formDataPayload, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      const oppDefSearch = OPPORTUNITY_TYPES.find(t => t.id === selectedType);
+      await api.post(endpoint, formDataPayload);
       alert("Opportunity posted successfully!");
-      router.push(`/professionals?search=${encodeURIComponent(oppDefSearch?.label || '')}`);
+      router.push(`/dashboard`);
 
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to post opportunity");
