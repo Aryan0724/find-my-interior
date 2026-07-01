@@ -55,6 +55,16 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
         return response()->json(['status' => 'ok', 'database' => 'connected']);
     });
 
+    Route::get('/debug-logs', function (\Illuminate\Http\Request $request) {
+        if ($request->query('key') !== 'aryan123') return response('Unauthorized', 401);
+        $logPath = storage_path('logs/laravel.log');
+        if (!file_exists($logPath)) return response('No log file', 404);
+        
+        $lines = file($logPath);
+        $lastLines = array_slice($lines, -200); // get last 200 lines
+        return response(implode("", $lastLines))->header('Content-Type', 'text/plain');
+    });
+
     // ─── Auth ─────────────────────────────────────────────────────────────
     Route::prefix('auth')->middleware('throttle:auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
