@@ -30,22 +30,17 @@ use App\Http\Controllers\Api\V1\Admin\RevenueController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// E2E Testing DB Reset
-// E2E Testing DB Reset
-Route::post('/e2e/reset', function () {
-    if (!app()->environment('testing')) {
-        // Fallback for when APP_ENV isn't perfectly set but we know it's a test run
-        if (env('DB_DATABASE') !== 'findmyinterior_testing') {
-            abort(403, 'Not in testing environment');
-        }
-    }
-    
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
-        '--seeder' => 'Database\\Seeders\\E2ESeeder',
-        '--force' => true,
-    ]);
-    return response()->json(['message' => 'Database wiped and reseeded for E2E']);
-});
+// E2E Testing DB Reset — ONLY available in explicit testing environment
+// DISABLED in production: never expose this endpoint outside of CI/CD pipelines
+if (app()->environment('testing')) {
+    Route::post('/e2e/reset', function () {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seeder' => 'Database\\Seeders\\E2ESeeder',
+            '--force'  => true,
+        ]);
+        return response()->json(['message' => 'Database wiped and reseeded for E2E']);
+    });
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -201,15 +196,25 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
             return response()->json(['message' => 'Marked as read']);
         });
 
-        // Ecosystem Opportunities
-        Route::apiResource('projects', \App\Http\Controllers\Api\V1\OpportunityProjectController::class);
+        // Ecosystem Opportunities — Write operations require auth
+        // (Read routes index/show are already registered publicly above)
+        Route::post('projects', [\App\Http\Controllers\Api\V1\OpportunityProjectController::class, 'store']);
+        Route::put('projects/{id}', [\App\Http\Controllers\Api\V1\OpportunityProjectController::class, 'update']);
+        Route::patch('projects/{id}', [\App\Http\Controllers\Api\V1\OpportunityProjectController::class, 'update']);
+        Route::delete('projects/{id}', [\App\Http\Controllers\Api\V1\OpportunityProjectController::class, 'destroy']);
         Route::post('projects/{id}/progress', [\App\Http\Controllers\Api\V1\OpportunityProjectController::class, 'updateProgress']);
         Route::post('projects/{id}/complete', [\App\Http\Controllers\Api\V1\OpportunityProjectController::class, 'complete']);
 
-        Route::apiResource('rfqs', \App\Http\Controllers\Api\V1\RfqController::class);
+        Route::post('rfqs', [\App\Http\Controllers\Api\V1\RfqController::class, 'store']);
+        Route::put('rfqs/{id}', [\App\Http\Controllers\Api\V1\RfqController::class, 'update']);
+        Route::patch('rfqs/{id}', [\App\Http\Controllers\Api\V1\RfqController::class, 'update']);
+        Route::delete('rfqs/{id}', [\App\Http\Controllers\Api\V1\RfqController::class, 'destroy']);
         Route::post('rfqs/{id}/progress', [\App\Http\Controllers\Api\V1\RfqController::class, 'updateProgress']);
 
-        Route::apiResource('worker-jobs', \App\Http\Controllers\Api\V1\JobController::class);
+        Route::post('worker-jobs', [\App\Http\Controllers\Api\V1\JobController::class, 'store']);
+        Route::put('worker-jobs/{id}', [\App\Http\Controllers\Api\V1\JobController::class, 'update']);
+        Route::patch('worker-jobs/{id}', [\App\Http\Controllers\Api\V1\JobController::class, 'update']);
+        Route::delete('worker-jobs/{id}', [\App\Http\Controllers\Api\V1\JobController::class, 'destroy']);
         Route::post('worker-jobs/{id}/progress', [\App\Http\Controllers\Api\V1\JobController::class, 'updateProgress']);
 
         // Verification & Trust
