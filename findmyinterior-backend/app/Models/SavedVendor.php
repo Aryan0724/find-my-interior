@@ -17,3 +17,4 @@ class SavedVendor extends Model
     {
         return $this->belongsTo(User::class, 'vendor_id');
     }
+}

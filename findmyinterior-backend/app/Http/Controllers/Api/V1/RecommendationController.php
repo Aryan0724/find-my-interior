@@ -61,8 +61,12 @@ class RecommendationController extends Controller
         })->filter()->values();
 
         return response()->json([
-            'success' => true,
-            'data'    => $recommendations,
+            'success'         => true,
+            'requirement_id'  => $requirementId,
+            'recommendations' => $recommendations->map(fn($r) => array_merge($r, [
+                'vendor_name' => $r['vendor']['name'] ?? null,
+            ])),
+            'data'            => $recommendations,
         ]);
     }
 }

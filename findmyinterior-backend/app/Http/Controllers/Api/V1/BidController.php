@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 
 class BidController extends Controller
 {
+    use \App\Traits\ApiResponse;
+
     private BidService $bidService;
     private WalletService $walletService;
 
@@ -27,12 +29,12 @@ class BidController extends Controller
     public function store(Request $request): JsonResponse
     {
         if ($request->user()->cannot('create', Bid::class)) {
-            return response()->json(['message' => 'Only verified professionals can bid'], 403);
+            return $this->error('Only verified professionals can bid', 403);
         }
 
         $validated = $request->validate([
             'requirement_id' => 'required|integer',
-            'requirement_type' => 'required|string|in:project,rfq,job',
+            'requirement_type' => 'nullable|string|in:project,rfq,job',
             'estimated_cost' => 'required|numeric|min:0',
             'timeline_days' => 'required|integer|min:1',
             'warranty_months' => 'nullable|integer|min:0',
@@ -43,6 +45,8 @@ class BidController extends Controller
             'portfolio_urls' => 'nullable|array',
             'proposal_message' => 'required|string|max:1000',
         ]);
+        // Default to 'project' when omitted — most bids are for project requirements
+        $validated['requirement_type'] = $validated['requirement_type'] ?? 'project';
 
         $modelClass = \App\Models\Requirement::class;
         $morphType = 'Project'; // Must match morphMap in AppServiceProvider
@@ -76,9 +80,7 @@ class BidController extends Controller
         if (!$isWorker && $fee > 0) {
             $balance = $this->walletService->getBalance($request->user());
             if ($balance < $fee) {
-                return response()->json([
-                    'message' => "Insufficient wallet balance to submit bid. Please recharge ₹{$fee}."
-                ], 402); // 402 Payment Required
+                return $this->error("Insufficient wallet balance to submit bid. Please recharge ₹{$fee}.", 402);
             }
             
             try {
@@ -89,16 +91,13 @@ class BidController extends Controller
                     ['reference_type' => $morphType, 'reference_id' => $validated['requirement_id']]
                 );
             } catch (\Exception $e) {
-                return response()->json(['message' => 'Failed to process bid fee: ' . $e->getMessage()], 400);
+                return $this->error('Failed to process bid fee: ' . $e->getMessage(), 400);
             }
         }
 
         $bid = $this->bidService->submitBid($request->user()->id, $validated);
 
-        return response()->json([
-            'message' => 'Bid submitted successfully',
-            'bid' => $bid
-        ], 201);
+        return $this->success($bid, 'Bid submitted successfully', 201);
     }
 
     /**
@@ -166,7 +165,7 @@ class BidController extends Controller
         
         // Authorization
         if ($requirement->user_id !== $request->user()->id && !$request->user()->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $bids = Bid::with(['professional.vendorMetrics'])
@@ -195,7 +194,7 @@ class BidController extends Controller
             ];
         });
 
-        return response()->json([
+        return $this->success([
             'requirement_id' => $requirementId,
             'bids_count' => $bids->count(),
             'comparison_matrix' => $comparison
@@ -208,29 +207,23 @@ class BidController extends Controller
     public function accept(Request $request, Bid $bid): JsonResponse
     {
         if ($request->user()->cannot('award', $bid)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $this->bidService->shortlistBid($bid, $request->user());
 
-        return response()->json([
-            'message' => 'Bid shortlisted successfully',
-            'bid' => $bid->fresh()
-        ]);
+        return $this->success($bid->fresh(), 'Bid shortlisted successfully');
     }
 
     public function reject(Request $request, Bid $bid): JsonResponse
     {
         if ($request->user()->cannot('award', $bid)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $bid->update(['status' => 'rejected']);
 
-        return response()->json([
-            'message' => 'Bid rejected',
-            'bid' => $bid
-        ]);
+        return $this->success($bid, 'Bid rejected');
     }
 
     /**
@@ -239,15 +232,12 @@ class BidController extends Controller
     public function award(Request $request, Bid $bid): JsonResponse
     {
         if ($request->user()->cannot('award', $bid)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $this->bidService->awardBid($bid, $request->user());
 
-        return response()->json([
-            'message' => 'Project awarded successfully',
-            'bid' => $bid->fresh()
-        ]);
+        return $this->success($bid->fresh(), 'Project awarded successfully');
     }
 
     /**
@@ -263,14 +253,11 @@ class BidController extends Controller
         $requirement = $modelClass::findOrFail($requirementId);
         
         if ($requirement->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $this->bidService->completeRequirement($requirement, $request->user());
 
-        return response()->json([
-            'message' => 'Project completed successfully',
-            'requirement' => $requirement->fresh()
-        ]);
+        return $this->success($requirement->fresh(), 'Project completed successfully');
     }
 }

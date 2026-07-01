@@ -179,20 +179,20 @@ class BidService
             $requirement = $bid->requirement;
             
             // Update the requirement model based on its type
-            if ($requirement instanceof \App\Models\Project || $requirement instanceof \App\Models\Requirement) {
+            if ($requirement->getTable() === 'projects') {
                 $requirement->update([
                     'status' => 'awarded',
                     'winning_bid_id' => $bid->id,
                     'professional_id' => $bid->professional_id,
                     'started_at' => now(),
                 ]);
-            } else if ($requirement instanceof \App\Models\Rfq) {
+            } else if ($requirement->getTable() === 'rfqs') {
                 $requirement->update([
                     'status' => 'awarded',
                     'winning_quote_id' => $bid->id,
                     'supplier_id' => $bid->professional_id,
                 ]);
-            } else if ($requirement instanceof \App\Models\WorkerJob) {
+            } else if ($requirement->getTable() === 'worker_jobs') {
                 $requirement->update([
                     'status' => 'awarded',
                     'winning_application_id' => $bid->id,

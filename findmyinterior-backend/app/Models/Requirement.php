@@ -22,13 +22,15 @@ class Requirement extends Model
         'name', 'phone', 'email',
         'opportunity_type', 'requirement_type', 'creator_role',
         'target_roles', 'project_category', 'budget_tier',
+        'project_type', 'image', 'district_id', 'awarded_vendor_id',
+        'awarded_bid_id', 'award_value', 'awarded_at',
     ];
 
     protected $casts = [
         'target_roles' => 'array',
     ];
 
-    protected $appends = ['formatted_budget', 'unlock_price_display', 'timeline'];
+    protected $appends = ['formatted_budget', 'unlock_price_display'];
 
     protected static function booted()
     {
@@ -87,12 +89,14 @@ class Requirement extends Model
 
     public function contactUnlocks(): HasMany
     {
-        return $this->hasMany(ContactUnlock::class);
+        return $this->hasMany(ContactUnlock::class, 'requirement_id')
+            ->whereIn('requirement_type', ['Project', 'Requirement', 'App\Models\Requirement', 'App\Models\Project']);
     }
 
     public function bids(): HasMany
     {
-        return $this->hasMany(Bid::class);
+        return $this->hasMany(Bid::class, 'requirement_id')
+            ->whereIn('requirement_type', ['Project', 'Requirement', 'App\Models\Requirement', 'App\Models\Project']);
     }
 
     // ─── Scopes ───────────────────────────────────────────────────────────────

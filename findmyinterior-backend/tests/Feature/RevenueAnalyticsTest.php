@@ -21,9 +21,12 @@ class RevenueAnalyticsTest extends TestCase
         $this->service = app(RevenueAnalyticsService::class);
         $this->admin = User::factory()->create();
         
-        // Assign admin role
-        $roleId = DB::table('roles')->insertGetId(['name' => 'Admin', 'slug' => 'admin', 'created_at' => now(), 'updated_at' => now()]);
-        DB::table('user_roles')->insert(['user_id' => $this->admin->id, 'role_id' => $roleId]);
+        // Assign admin role — use firstOrCreate to avoid UNIQUE slug violations between tests
+        $roleId = \App\Models\Role::firstOrCreate(
+            ['slug' => 'admin'],
+            ['name' => 'Admin']
+        )->id;
+        DB::table('user_roles')->insertOrIgnore(['user_id' => $this->admin->id, 'role_id' => $roleId]);
     }
 
     protected function seedWalletTransactions(): void

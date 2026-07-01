@@ -70,10 +70,11 @@ class RecommendationEngineTest extends TestCase
             'city_id'     => $city->id,
         ]);
 
-        $score = $this->engine->calculateScore($requirement, $listing, $vendor);
+        $result = $this->engine->calculateScore($requirement, $listing, $vendor);
+        $score = $result['score'];
 
-        // Category (25) + City (20) + Verification (5) + Availability (5) = 55 minimum
-        // Plus rating (4.5/5 * 15 = 13.5), completion (0), response (0), activity (0)
+        // Category (25) + City (20) + Verification (5) + Availability (10) = 60 minimum
+        // Plus rating (4.5/5 * 10 = 9.0 from cold-start) = 69 minimum
         $this->assertGreaterThanOrEqual(55.0, $score);
         $this->assertLessThanOrEqual(100.0, $score);
     }
@@ -160,8 +161,8 @@ class RecommendationEngineTest extends TestCase
             'city_id'     => $city->id,
         ]);
 
-        $score = $this->engine->calculateScore($requirement, $listing, $vendor->fresh());
-        $this->assertLessThanOrEqual(100.0, $score);
+        $result = $this->engine->calculateScore($requirement, $listing, $vendor->fresh());
+        $this->assertLessThanOrEqual(100.0, $result['score']);
     }
 
     public function test_api_returns_recommendations_for_requirement(): void

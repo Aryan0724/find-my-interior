@@ -88,6 +88,8 @@ class ConversationController extends Controller
             $morphVariants[] = 'Requirement';
             $morphVariants[] = 'App\\Models\\Requirement';
             $morphVariants[] = 'Project';
+            $morphVariants[] = 'App\\Models\\Project';
+            $morphVariants[] = 'App\Models\Project';
         }
         $morphVariants = array_unique($morphVariants);
 
@@ -97,7 +99,10 @@ class ConversationController extends Controller
             ->exists();
 
         $bid = Bid::where('requirement_id', $requirementId)
-            ->whereIn('requirement_type', $morphVariants)
+            ->where(function ($q) use ($morphVariants) {
+                $q->whereIn('requirement_type', $morphVariants)
+                  ->orWhereNull('requirement_type');
+            })
             ->where('professional_id', $vendorId)
             ->first();
 

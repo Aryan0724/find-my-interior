@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class RfqController extends Controller
 {
+    use \App\Traits\ApiResponse, \App\Traits\ParsesBudget;
+
     public function index()
     {
-        return response()->json(Rfq::latest()->get());
+        return $this->success(Rfq::latest()->get());
     }
 
     public function store(Request $request)
@@ -24,28 +26,46 @@ class RfqController extends Controller
             'district' => 'required|string',
             'opportunity_type' => 'required|string',
             'requirement_type' => 'required|string',
-            'budget' => 'nullable|numeric',
+            'budget' => 'nullable|string',
             'quantity' => 'nullable|string',
             'material_type' => 'nullable|string',
             'delivery_location' => 'nullable|string',
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return $this->error('Unauthenticated', 401);
+        }
+
+        $budgetMin = null;
+        $budgetMax = null;
+        $this->parseBudget($validated['budget'] ?? null, $budgetMin, $budgetMax);
 
         $oppType = OpportunityType::where('type', $validated['requirement_type'])->first();
 
+        $creatorRole = 'homeowner';
+        if ($user->roles()->exists()) {
+            $firstRole = $user->roles()->first();
+            if ($firstRole) {
+                $creatorRole = $firstRole->slug;
+            }
+        }
+
         $rfq = Rfq::create([
-            'user_id' => Auth::id() ?? 1,
+            'user_id' => $user->id,
             'title' => $validated['title'],
             'description' => $validated['description'],
             'city' => $validated['city'],
             'district' => $validated['district'],
             'opportunity_type' => $validated['opportunity_type'],
             'requirement_type' => $validated['requirement_type'],
-            'budget_min' => $validated['budget'] ?? null,
-            'budget_max' => $validated['budget'] ?? null,
+            'budget_min' => $budgetMin,
+            'budget_max' => $budgetMax,
             'quantity' => $validated['quantity'] ?? null,
             'material_type' => $validated['material_type'] ?? null,
             'delivery_location' => $validated['delivery_location'] ?? $validated['city'],
-            'creator_role' => Auth::check() ? Auth::user()->roles->first()->slug ?? 'homeowner' : 'homeowner',
+            'creator_role' => $creatorRole,
             'target_roles' => $oppType ? $oppType->target_roles : ['supplier'],
             'status' => 'open'
         ]);
@@ -58,7 +78,7 @@ class RfqController extends Controller
             $rfq->save();
         }
 
-        return response()->json(['status' => 'success', 'data' => $rfq], 201);
+        return $this->success($rfq, 'RFQ created successfully', 201);
     }
 
     public function show(string $id)
@@ -67,7 +87,7 @@ class RfqController extends Controller
         
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return $this->error('Unauthorized', 401);
         }
 
         $userRoles = $user->roles->pluck('slug')->toArray();
@@ -86,17 +106,17 @@ class RfqController extends Controller
         }
 
         if (!$isCreator && !$isTarget) {
-            return response()->json(['message' => 'Forbidden. This RFQ is not available for your role.'], 403);
+            return $this->error('Forbidden. This RFQ is not available for your role.', 403);
         }
 
-        return response()->json(['status' => 'success', 'data' => $rfq]);
+        return $this->success($rfq);
     }
 
     public function update(Request $request, string $id)
     {
         $rfq = Rfq::findOrFail($id);
         $rfq->update($request->all());
-        return response()->json(['status' => 'success', 'data' => $rfq]);
+        return $this->success($rfq, 'RFQ updated successfully');
     }
 
     public function updateProgress(Request $request, string $id)
@@ -105,7 +125,7 @@ class RfqController extends Controller
         $user = Auth::user();
         
         if ($user->id !== $rfq->user_id && $user->id !== $rfq->supplier_id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $validated = $request->validate([
@@ -115,12 +135,12 @@ class RfqController extends Controller
         $rfq->status = $validated['status'];
         $rfq->save();
 
-        return response()->json(['status' => 'success', 'data' => $rfq]);
+        return $this->success($rfq, 'Progress updated successfully');
     }
 
     public function destroy(string $id)
     {
         Rfq::destroy($id);
-        return response()->json(['status' => 'success']);
+        return $this->success(null, 'RFQ deleted');
     }
 }

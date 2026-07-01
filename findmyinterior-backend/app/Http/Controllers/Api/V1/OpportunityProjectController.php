@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class OpportunityProjectController extends Controller
 {
+    use \App\Traits\ApiResponse, \App\Traits\ParsesBudget;
+
     public function index()
     {
-        return response()->json(Requirement::latest()->get());
+        return $this->success(Requirement::latest()->get());
     }
 
     public function store(Request $request)
@@ -27,12 +29,19 @@ class OpportunityProjectController extends Controller
             'project_category' => 'nullable|string',
             'budget_min'       => 'nullable|numeric',
             'budget_max'       => 'nullable|numeric',
+            'budget'           => 'nullable|string',
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            return $this->error('Unauthenticated', 401);
         }
+
+        // Parse budget string if budget_min/max are not provided
+        $budgetMin = $validated['budget_min'] ?? null;
+        $budgetMax = $validated['budget_max'] ?? null;
+        $this->parseBudget($validated['budget'] ?? null, $budgetMin, $budgetMax);
 
         // Resolve target roles from OpportunityType config
         $oppType = OpportunityType::where('type', $validated['requirement_type'])->first();
@@ -59,8 +68,8 @@ class OpportunityProjectController extends Controller
             'opportunity_type' => $validated['opportunity_type'],
             'requirement_type' => $validated['requirement_type'],
             'project_category' => $validated['project_category'] ?? null,
-            'budget_min'       => $validated['budget_min'] ?? null,
-            'budget_max'       => $validated['budget_max'] ?? null,
+            'budget_min'       => $budgetMin,
+            'budget_max'       => $budgetMax,
             'creator_role'     => $creatorRole,
             'target_roles'     => $oppType ? $oppType->target_roles : ['interior_designer', 'contractor', 'builder'],
             'status'           => 'open',
@@ -76,7 +85,7 @@ class OpportunityProjectController extends Controller
             ]);
         }
 
-        return response()->json(['status' => 'success', 'data' => $requirement], 201);
+        return $this->success($requirement, 'Requirement created successfully', 201);
     }
 
     public function show(string $id)
@@ -85,7 +94,7 @@ class OpportunityProjectController extends Controller
 
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return $this->error('Unauthorized', 401);
         }
 
         $userRoles = $user->roles->pluck('slug')->toArray();
@@ -105,17 +114,17 @@ class OpportunityProjectController extends Controller
         }
 
         if (!$isCreator && !$isTarget && !$isAdmin) {
-            return response()->json(['message' => 'Forbidden. This opportunity is not available for your role.'], 403);
+            return $this->error('Forbidden. This opportunity is not available for your role.', 403);
         }
 
-        return response()->json(['status' => 'success', 'data' => $requirement]);
+        return $this->success($requirement);
     }
 
     public function update(Request $request, string $id)
     {
         $requirement = Requirement::findOrFail($id);
         $requirement->update($request->all());
-        return response()->json(['status' => 'success', 'data' => $requirement]);
+        return $this->success($requirement, 'Requirement updated successfully');
     }
 
     public function updateProgress(Request $request, string $id)
@@ -126,7 +135,7 @@ class OpportunityProjectController extends Controller
         $isAdmin = in_array('admin', $user->roles->pluck('slug')->toArray());
 
         if ($user->id !== $requirement->user_id && !$isAdmin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $validated = $request->validate([
@@ -136,7 +145,7 @@ class OpportunityProjectController extends Controller
         $requirement->status = $validated['status'];
         $requirement->save();
 
-        return response()->json(['status' => 'success', 'data' => $requirement]);
+        return $this->success($requirement, 'Progress updated successfully');
     }
 
     public function complete(Request $request, string $id)
@@ -145,19 +154,19 @@ class OpportunityProjectController extends Controller
         $user        = Auth::user();
 
         if ($user->id !== $requirement->user_id) {
-            return response()->json(['message' => 'Only the client can complete the project'], 403);
+            return $this->error('Only the client can complete the project', 403);
         }
 
         $requirement->status       = 'completed';
         $requirement->completed_at = now();
         $requirement->save();
 
-        return response()->json(['status' => 'success', 'data' => $requirement]);
+        return $this->success($requirement, 'Project completed');
     }
 
     public function destroy(string $id)
     {
         Requirement::destroy($id);
-        return response()->json(['status' => 'success']);
+        return $this->success(null, 'Requirement deleted');
     }
 }

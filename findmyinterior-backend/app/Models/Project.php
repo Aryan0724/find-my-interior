@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @deprecated This model is duplicate concept of Requirement model pointing to same 'projects' table.
+ * Use App\Models\Requirement instead.
+ */
 class Project extends Model
 {
     use HasFactory, SoftDeletes;

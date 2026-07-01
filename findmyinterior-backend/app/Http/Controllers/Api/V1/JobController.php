@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class JobController extends Controller
 {
+    use \App\Traits\ApiResponse, \App\Traits\ParsesBudget;
+
     public function index()
     {
-        return response()->json(WorkerJob::latest()->get());
+        return $this->success(WorkerJob::latest()->get());
     }
 
     public function store(Request $request)
@@ -24,28 +26,43 @@ class JobController extends Controller
             'district' => 'required|string',
             'opportunity_type' => 'required|string',
             'requirement_type' => 'required|string',
-            'daily_rate' => 'nullable|numeric',
-            'budget' => 'nullable|numeric',
+            'daily_rate' => 'nullable|string',
             'duration' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return $this->error('Unauthenticated', 401);
+        }
+
+        $budgetMin = null;
+        $budgetMax = null;
+        $this->parseBudget($validated['daily_rate'] ?? null, $budgetMin, $budgetMax);
+        $dailyRate = $budgetMin;
 
         $oppType = OpportunityType::where('type', $validated['requirement_type'])->first();
 
-        // Also capture budget if sent instead of daily_rate
-        $rate = $validated['daily_rate'] ?? $validated['budget'] ?? null;
+        $creatorRole = 'homeowner';
+        if ($user->roles()->exists()) {
+            $firstRole = $user->roles()->first();
+            if ($firstRole) {
+                $creatorRole = $firstRole->slug;
+            }
+        }
 
         $job = WorkerJob::create([
-            'user_id' => Auth::id() ?? 1,
+            'user_id' => $user->id,
             'title' => $validated['title'],
             'description' => $validated['description'],
             'city' => $validated['city'],
             'district' => $validated['district'],
             'opportunity_type' => $validated['opportunity_type'],
             'requirement_type' => $validated['requirement_type'],
-            'daily_rate' => $rate,
-            'duration' => $validated['duration'] ?? null,
-            'creator_role' => Auth::check() ? Auth::user()->roles->first()->slug ?? 'homeowner' : 'homeowner',
-            'target_roles' => $oppType ? $oppType->target_roles : ['worker', 'contractor'],
+            'daily_rate' => $dailyRate,
+            'duration' => $validated['duration'] ?? '1 day',
+            'creator_role' => $creatorRole,
+            'target_roles' => $oppType ? $oppType->target_roles : ['worker'],
             'status' => 'open'
         ]);
 
@@ -57,7 +74,7 @@ class JobController extends Controller
             $job->save();
         }
 
-        return response()->json(['status' => 'success', 'data' => $job], 201);
+        return $this->success($job, 'Job created successfully', 201);
     }
 
     public function show(string $id)
@@ -66,7 +83,7 @@ class JobController extends Controller
         
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return $this->error('Unauthorized', 401);
         }
 
         $userRoles = $user->roles->pluck('slug')->toArray();
@@ -85,17 +102,17 @@ class JobController extends Controller
         }
 
         if (!$isCreator && !$isTarget) {
-            return response()->json(['message' => 'Forbidden. This Job is not available for your role.'], 403);
+            return $this->error('Forbidden. This Job is not available for your role.', 403);
         }
 
-        return response()->json(['status' => 'success', 'data' => $job]);
+        return $this->success($job);
     }
 
     public function update(Request $request, string $id)
     {
         $job = WorkerJob::findOrFail($id);
         $job->update($request->all());
-        return response()->json(['status' => 'success', 'data' => $job]);
+        return $this->success($job, 'Job updated successfully');
     }
 
     public function updateProgress(Request $request, string $id)
@@ -104,7 +121,7 @@ class JobController extends Controller
         $user = Auth::user();
         
         if ($user->id !== $job->user_id && $user->id !== $job->worker_id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->error('Unauthorized', 403);
         }
 
         $validated = $request->validate([
@@ -114,12 +131,12 @@ class JobController extends Controller
         $job->status = $validated['status'];
         $job->save();
 
-        return response()->json(['status' => 'success', 'data' => $job]);
+        return $this->success($job, 'Progress updated successfully');
     }
 
     public function destroy(string $id)
     {
         WorkerJob::destroy($id);
-        return response()->json(['status' => 'success']);
+        return $this->success(null, 'Job deleted');
     }
 }

@@ -27,6 +27,11 @@ class Bid extends Model
         'proposal_message',
         'smart_bid_score',
         'status',
+        'is_awarded',
+        'awarded_at',
+        'revision_count',
+        'withdrawn_at',
+        'rejection_reason',
     ];
     
     protected $casts = [

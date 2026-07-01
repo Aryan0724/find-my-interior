@@ -18,14 +18,14 @@ class Rfq extends Model
         'user_id', 'title', 'description', 'city', 'district',
         'opportunity_type', 'requirement_type', 'creator_role', 'target_roles',
         'status', 'budget_min', 'budget_max', 'quantity', 'material_type', 'delivery_location', 'timeline',
-        'supplier_id', 'winning_quote_id'
+        'supplier_id', 'winning_quote_id', 'image'
     ];
 
     protected $casts = [
         'target_roles' => 'array',
     ];
 
-    protected $appends = ['formatted_budget', 'unlock_price_display', 'timeline'];
+    protected $appends = ['formatted_budget', 'unlock_price_display'];
 
     public function getFormattedBudgetAttribute()
     {
@@ -65,6 +65,7 @@ class Rfq extends Model
 
     public function bids(): HasMany
     {
-        return $this->hasMany(Bid::class, 'requirement_id'); // Temporary until bids table migrates to polymorphic
+        return $this->hasMany(Bid::class, 'requirement_id')
+            ->whereIn('requirement_type', ['Rfq', 'App\Models\Rfq']);
     }
 }

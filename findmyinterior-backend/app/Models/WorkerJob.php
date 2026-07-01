@@ -18,7 +18,7 @@ class WorkerJob extends Model
         'user_id', 'title', 'description', 'city', 'district',
         'opportunity_type', 'requirement_type', 'creator_role', 'target_roles',
         'status', 'daily_rate', 'duration', 'skills_required', 'location',
-        'worker_id', 'winning_application_id'
+        'worker_id', 'winning_application_id', 'image'
     ];
 
     protected $casts = [
@@ -26,7 +26,7 @@ class WorkerJob extends Model
         'skills_required' => 'array',
     ];
 
-    protected $appends = ['formatted_budget', 'unlock_price_display', 'timeline'];
+    protected $appends = ['formatted_budget', 'unlock_price_display'];
 
     public function getFormattedBudgetAttribute()
     {

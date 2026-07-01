@@ -108,6 +108,7 @@ class RequirementController extends Controller
 
         $requirement = Requirement::create([
             ...$data,
+            'project_type' => $data['project_type'] ?? $data['project_category'] ?? 'general',
             'creator_role' => $creatorRole,
             'user_id' => $request->user()?->id,
             'status'  => 'pending',
