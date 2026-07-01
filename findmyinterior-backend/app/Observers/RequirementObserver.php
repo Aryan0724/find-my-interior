@@ -22,7 +22,7 @@ class RequirementObserver
      */
     public function created(Requirement $requirement): void
     {
-        GenerateRequirementRecommendations::dispatch($requirement);
+        GenerateRequirementRecommendations::dispatchAfterResponse($requirement);
     }
 
     public function updated(Requirement $requirement): void
