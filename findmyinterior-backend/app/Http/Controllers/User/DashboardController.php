@@ -50,7 +50,9 @@ class DashboardController extends Controller
                 }])
                 ->latest()->get()->map(function($p) {
                     $awardedBid = $p->bids->first();
-                    $p->professional_id = $awardedBid?->professional_id ?? $p->winning_bid_id ? \App\Models\Bid::find($p->winning_bid_id)?->professional_id : null;
+                    // Fix: proper operator precedence with explicit parentheses
+                    $p->professional_id = $awardedBid?->professional_id 
+                        ?? ($p->winning_bid_id ? \App\Models\Bid::find($p->winning_bid_id)?->professional_id : null);
                     $p->_type = 'project';
                     return $p;
                 });
@@ -89,79 +91,84 @@ class DashboardController extends Controller
             $rfqIds = \App\Models\Rfq::where('user_id', $user->id)->pluck('id');
             $jobIds = \App\Models\WorkerJob::where('user_id', $user->id)->pluck('id');
 
-            $data['received_bids'] = \App\Models\Bid::with(['professional'])
-                ->where(function($query) use ($projectIds, $rfqIds, $jobIds) {
-                    if ($projectIds->isNotEmpty()) {
-                        $query->orWhere(function($q) use ($projectIds) {
-                            $q->whereIn('requirement_type', ['Project', 'Requirement', 'App\Models\Requirement', 'App\Models\Project'])
-                              ->whereIn('requirement_id', $projectIds);
-                        });
-                    }
-                    if ($rfqIds->isNotEmpty()) {
-                        $query->orWhere(function($q) use ($rfqIds) {
-                            $q->whereIn('requirement_type', ['Rfq', 'App\Models\Rfq'])
-                              ->whereIn('requirement_id', $rfqIds);
-                        });
-                    }
-                    if ($jobIds->isNotEmpty()) {
-                        $query->orWhere(function($q) use ($jobIds) {
-                            $q->whereIn('requirement_type', ['WorkerJob', 'App\Models\WorkerJob'])
-                              ->whereIn('requirement_id', $jobIds);
-                        });
-                    }
-                })
-                ->latest()
-                ->get()
-                ->map(function ($bid) {
-                    // Resolve the requirement title and type label
-                    $requirementTitle = 'Requirement #' . $bid->requirement_id;
-                    $requirementTypeLabel = $bid->requirement_type;
+            // Short-circuit: if user has no opportunities, they have no received bids
+            if ($projectIds->isEmpty() && $rfqIds->isEmpty() && $jobIds->isEmpty()) {
+                $data['received_bids'] = collect([]);
+            } else {
+                $data['received_bids'] = \App\Models\Bid::with(['professional'])
+                    ->where(function($query) use ($projectIds, $rfqIds, $jobIds) {
+                        if ($projectIds->isNotEmpty()) {
+                            $query->orWhere(function($q) use ($projectIds) {
+                                $q->whereIn('requirement_type', ['Project', 'Requirement', 'App\Models\Requirement', 'App\Models\Project'])
+                                  ->whereIn('requirement_id', $projectIds);
+                            });
+                        }
+                        if ($rfqIds->isNotEmpty()) {
+                            $query->orWhere(function($q) use ($rfqIds) {
+                                $q->whereIn('requirement_type', ['Rfq', 'App\Models\Rfq'])
+                                  ->whereIn('requirement_id', $rfqIds);
+                            });
+                        }
+                        if ($jobIds->isNotEmpty()) {
+                            $query->orWhere(function($q) use ($jobIds) {
+                                $q->whereIn('requirement_type', ['WorkerJob', 'App\Models\WorkerJob'])
+                                  ->whereIn('requirement_id', $jobIds);
+                            });
+                        }
+                    })
+                    ->latest()
+                    ->get()
+                    ->map(function ($bid) {
+                        // Resolve the requirement title and type label
+                        $requirementTitle = 'Requirement #' . $bid->requirement_id;
+                        $requirementTypeLabel = $bid->requirement_type;
 
-                    if (in_array($bid->requirement_type, ['Project', 'Requirement', 'App\Models\Requirement', 'App\Models\Project'])) {
-                        $req = \App\Models\Requirement::find($bid->requirement_id);
-                        $requirementTitle = $req?->title ?? $requirementTitle;
-                        $requirementTypeLabel = 'Project';
-                    } elseif (in_array($bid->requirement_type, ['Rfq', 'App\Models\Rfq'])) {
-                        $req = \App\Models\Rfq::find($bid->requirement_id);
-                        $requirementTitle = $req?->title ?? $requirementTitle;
-                        $requirementTypeLabel = 'RFQ';
-                    } elseif (in_array($bid->requirement_type, ['WorkerJob', 'App\Models\WorkerJob'])) {
-                        $req = \App\Models\WorkerJob::find($bid->requirement_id);
-                        $requirementTitle = $req?->title ?? $requirementTitle;
-                        $requirementTypeLabel = 'Skilled Labour Job';
-                    }
+                        if (in_array($bid->requirement_type, ['Project', 'Requirement', 'App\Models\Requirement', 'App\Models\Project'])) {
+                            $req = \App\Models\Requirement::find($bid->requirement_id);
+                            $requirementTitle = $req?->title ?? $requirementTitle;
+                            $requirementTypeLabel = 'Project';
+                        } elseif (in_array($bid->requirement_type, ['Rfq', 'App\Models\Rfq'])) {
+                            $req = \App\Models\Rfq::find($bid->requirement_id);
+                            $requirementTitle = $req?->title ?? $requirementTitle;
+                            $requirementTypeLabel = 'RFQ';
+                        } elseif (in_array($bid->requirement_type, ['WorkerJob', 'App\Models\WorkerJob'])) {
+                            $req = \App\Models\WorkerJob::find($bid->requirement_id);
+                            $requirementTitle = $req?->title ?? $requirementTitle;
+                            $requirementTypeLabel = 'Skilled Labour Job';
+                        }
 
-                    // Get worker/professional profile for extra info
-                    $professional = $bid->professional;
-                    $workerProfile = null;
-                    if ($professional) {
-                        $workerProfile = \App\Models\Worker::where('user_id', $professional->id)->first();
-                    }
+                        // Get worker/professional profile for extra info
+                        $professional = $bid->professional;
+                        $workerProfile = null;
+                        if ($professional) {
+                            $workerProfile = \App\Models\Worker::where('user_id', $professional->id)->first();
+                        }
 
-                    return [
-                        'id'                  => $bid->id,
-                        'status'              => $bid->status,
-                        'amount'              => $bid->amount,
-                        'timeline_days'       => $bid->timeline_days,
-                        'proposal_message'    => $bid->proposal_message,
-                        'smart_bid_score'     => $bid->smart_bid_score,
-                        'is_awarded'          => $bid->is_awarded,
-                        'created_at'          => $bid->created_at?->diffForHumans(),
-                        'requirement_title'   => $requirementTitle,
-                        'requirement_type'    => $requirementTypeLabel,
-                        'requirement_id'      => $bid->requirement_id,
-                        'professional' => $professional ? [
-                            'id'     => $professional->id,
-                            'name'   => $professional->name,
-                            'email'  => $professional->email,
-                            'avatar' => $professional->avatar,
-                            'skill'  => $workerProfile?->skill ?? null,
-                            'city'   => $workerProfile?->city ?? null,
-                            'experience_years' => $workerProfile?->experience_years ?? null,
-                            'avg_rating'       => $workerProfile?->avg_rating ?? 0,
-                        ] : null,
-                    ];
-                });
+                        return [
+                            'id'                  => $bid->id,
+                            'status'              => $bid->status,
+                            'amount'              => $bid->amount,
+                            'timeline_days'       => $bid->timeline_days,
+                            'proposal_message'    => $bid->proposal_message,
+                            'smart_bid_score'     => $bid->smart_bid_score,
+                            'is_awarded'          => $bid->is_awarded,
+                            'created_at'          => $bid->created_at?->diffForHumans(),
+                            'requirement_title'   => $requirementTitle,
+                            'requirement_type'    => $requirementTypeLabel,
+                            'requirement_id'      => $bid->requirement_id,
+                            'professional' => $professional ? [
+                                'id'     => $professional->id,
+                                'name'   => $professional->name,
+                                'email'  => $professional->email,
+                                'avatar' => $professional->avatar,
+                                'skill'  => $workerProfile?->skill ?? null,
+                                'city'   => $workerProfile?->city ?? null,
+                                'experience_years' => $workerProfile?->experience_years ?? null,
+                                'avg_rating'       => $workerProfile?->avg_rating ?? 0,
+                            ] : null,
+                        ];
+                    });
+            } // end else (has opportunities)
 
             $data['shortlisted_professionals'] = \App\Models\Shortlist::with(['professional'])
                 ->where('user_id', $user->id)

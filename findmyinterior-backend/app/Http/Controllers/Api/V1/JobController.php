@@ -82,12 +82,20 @@ class JobController extends Controller
         $job = WorkerJob::with(['user', 'bids.professional'])->findOrFail($id);
         
         $user = Auth::user();
+        
+        // Unauthenticated users get a basic public view
         if (!$user) {
-            return $this->error('Unauthorized', 401);
+            return $this->success($job);
         }
 
         $userRoles = $user->roles->pluck('slug')->toArray();
         $isCreator = $job->user_id === $user->id;
+        $isAdmin   = in_array('admin', $userRoles);
+
+        // Creator or admin can always see their own job
+        if ($isCreator || $isAdmin) {
+            return $this->success($job);
+        }
         
         $isTarget = false;
         if ($job->target_roles) {
@@ -101,7 +109,7 @@ class JobController extends Controller
             $isTarget = true; 
         }
 
-        if (!$isCreator && !$isTarget) {
+        if (!$isTarget) {
             return $this->error('Forbidden. This Job is not available for your role.', 403);
         }
 

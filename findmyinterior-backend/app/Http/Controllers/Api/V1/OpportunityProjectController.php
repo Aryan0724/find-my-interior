@@ -93,13 +93,20 @@ class OpportunityProjectController extends Controller
         $requirement = Requirement::with(['user', 'bids.professional'])->findOrFail($id);
 
         $user = Auth::user();
+        
+        // Unauthenticated users get a basic public view (no contact masking needed here)
         if (!$user) {
-            return $this->error('Unauthorized', 401);
+            return $this->success($requirement);
         }
 
         $userRoles = $user->roles->pluck('slug')->toArray();
         $isCreator = $requirement->user_id === $user->id;
         $isAdmin   = in_array('admin', $userRoles);
+
+        // Creator can always see their own requirement
+        if ($isCreator || $isAdmin) {
+            return $this->success($requirement);
+        }
 
         $isTarget = false;
         if ($requirement->target_roles) {
@@ -113,7 +120,7 @@ class OpportunityProjectController extends Controller
             $isTarget = true;
         }
 
-        if (!$isCreator && !$isTarget && !$isAdmin) {
+        if (!$isTarget) {
             return $this->error('Forbidden. This opportunity is not available for your role.', 403);
         }
 

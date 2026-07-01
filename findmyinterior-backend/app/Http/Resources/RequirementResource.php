@@ -48,7 +48,6 @@ class RequirementResource extends JsonResource
             'phone'          => $canSeeContact ? $this->phone : '+91 ***** *****',
             'email'          => $canSeeContact ? $this->email : null,
             'is_unlocked'    => $canSeeContact,
-            'timeline'       => $this->timeline ?? [],
             'created_at'     => $this->created_at?->diffForHumans(),
         ];
     }

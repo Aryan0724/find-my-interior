@@ -86,12 +86,20 @@ class RfqController extends Controller
         $rfq = Rfq::with(['user', 'bids.professional'])->findOrFail($id);
         
         $user = Auth::user();
+        
+        // Unauthenticated users get a basic public view
         if (!$user) {
-            return $this->error('Unauthorized', 401);
+            return $this->success($rfq);
         }
 
         $userRoles = $user->roles->pluck('slug')->toArray();
         $isCreator = $rfq->user_id === $user->id;
+        $isAdmin   = in_array('admin', $userRoles);
+
+        // Creator or admin can always see their own RFQ
+        if ($isCreator || $isAdmin) {
+            return $this->success($rfq);
+        }
         
         $isTarget = false;
         if ($rfq->target_roles) {
@@ -105,7 +113,7 @@ class RfqController extends Controller
             $isTarget = true; 
         }
 
-        if (!$isCreator && !$isTarget) {
+        if (!$isTarget) {
             return $this->error('Forbidden. This RFQ is not available for your role.', 403);
         }
 

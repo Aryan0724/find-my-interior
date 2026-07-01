@@ -1,0 +1,682 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\find my interior\\findmyinterior-frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "homeowner.spec.ts",
+      "--project=chromium"
+    ],
+    "configFile": "D:\\find my interior\\findmyinterior-frontend\\playwright.config.ts",
+    "rootDir": "D:/find my interior/findmyinterior-frontend/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 6
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/find my interior/findmyinterior-frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "setup",
+        "name": "setup",
+        "testDir": "D:/find my interior/findmyinterior-frontend/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "D:/find my interior/findmyinterior-frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 6
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/find my interior/findmyinterior-frontend/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "global.setup.ts",
+      "file": "global.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "wipe and seed database",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "setup",
+              "projectName": "setup",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 60588,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Wiping and reseeding the database for E2E tests...\n"
+                    },
+                    {
+                      "text": "Database reset response: Database wiped and reseeded for E2E\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-29T06:48:14.115Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e4eb4d1272d956fb120f-90123176fe617a6cf4f9",
+          "file": "global.setup.ts",
+          "line": 3,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "title": "homeowner.spec.ts",
+      "file": "homeowner.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Homeowner E2E Journey",
+          "file": "homeowner.spec.ts",
+          "line": 13,
+          "column": 6,
+          "specs": [
+            {
+              "title": "HO-01: New homeowner can register",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 324804,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:38:16",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts",
+                          "column": 16,
+                          "line": 38
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 36 |\u001b[39m     \n \u001b[90m 37 |\u001b[39m     \u001b[90m// Should redirect to dashboard after registration\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 38 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL((url) \u001b[33m=>\u001b[39m url\u001b[33m.\u001b[39mpathname \u001b[33m===\u001b[39m \u001b[32m'/dashboard'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m30000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=HOMEOWNER, text=Workspace'\u001b[39m)\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 40 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 41 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts",
+                            "column": 16,
+                            "line": 38
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n  36 |     \n  37 |     // Should redirect to dashboard after registration\n> 38 |     await page.waitForURL((url) => url.pathname === '/dashboard', { timeout: 30000 });\n     |                ^\n  39 |     await expect(page.locator('text=HOMEOWNER, text=Workspace').first()).toBeVisible();\n  40 |   });\n  41 |\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:38:16"
+                        },
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 180000ms.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:49:17.503Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-46d7b--New-homeowner-can-register-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts",
+                        "column": 16,
+                        "line": 38
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-53ade30f2a2253e1283f",
+              "file": "homeowner.spec.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "HO-02: Homeowner login and dashboard loads with correct role",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 290470,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:44:5",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                          "column": 21,
+                          "line": 23
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\LoginPage.ts:23\n\n\u001b[0m \u001b[90m 21 |\u001b[39m     \n \u001b[90m 22 |\u001b[39m     \u001b[90m// Wait for the URL to change (e.g. redirect to dashboard or home)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mwaitForURL(url \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39murl\u001b[33m.\u001b[39mtoString()\u001b[33m.\u001b[39mincludes(\u001b[32m'/login'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m   }\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36masync\u001b[39m logout() {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                            "column": 21,
+                            "line": 23
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n   at ..\\pages\\LoginPage.ts:23\n\n  21 |     \n  22 |     // Wait for the URL to change (e.g. redirect to dashboard or home)\n> 23 |     await this.page.waitForURL(url => !url.toString().includes('/login'));\n     |                     ^\n  24 |   }\n  25 |\n  26 |   async logout() {\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:44:5"
+                        },
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 180000ms.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:49:17.455Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-e0bdb-ard-loads-with-correct-role-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                        "column": 21,
+                        "line": 23
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-594a1db12818406c061a",
+              "file": "homeowner.spec.ts",
+              "line": 43,
+              "column": 7
+            },
+            {
+              "title": "HO-03: Homeowner can post a new Interior Design project",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 279440,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:57:5",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                          "column": 21,
+                          "line": 23
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\LoginPage.ts:23\n\n\u001b[0m \u001b[90m 21 |\u001b[39m     \n \u001b[90m 22 |\u001b[39m     \u001b[90m// Wait for the URL to change (e.g. redirect to dashboard or home)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mwaitForURL(url \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39murl\u001b[33m.\u001b[39mtoString()\u001b[33m.\u001b[39mincludes(\u001b[32m'/login'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m   }\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36masync\u001b[39m logout() {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                            "column": 21,
+                            "line": 23
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n   at ..\\pages\\LoginPage.ts:23\n\n  21 |     \n  22 |     // Wait for the URL to change (e.g. redirect to dashboard or home)\n> 23 |     await this.page.waitForURL(url => !url.toString().includes('/login'));\n     |                     ^\n  24 |   }\n  25 |\n  26 |   async logout() {\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:57:5"
+                        },
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 180000ms.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:49:17.499Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-555f9-new-Interior-Design-project-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                        "column": 21,
+                        "line": 23
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-989b70c994127fe038fc",
+              "file": "homeowner.spec.ts",
+              "line": 56,
+              "column": 7
+            },
+            {
+              "title": "HO-04: Homeowner can view their posted requirements",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 281576,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:98:5",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                          "column": 21,
+                          "line": 23
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\LoginPage.ts:23\n\n\u001b[0m \u001b[90m 21 |\u001b[39m     \n \u001b[90m 22 |\u001b[39m     \u001b[90m// Wait for the URL to change (e.g. redirect to dashboard or home)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mwaitForURL(url \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39murl\u001b[33m.\u001b[39mtoString()\u001b[33m.\u001b[39mincludes(\u001b[32m'/login'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m   }\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36masync\u001b[39m logout() {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                            "column": 21,
+                            "line": 23
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n   at ..\\pages\\LoginPage.ts:23\n\n  21 |     \n  22 |     // Wait for the URL to change (e.g. redirect to dashboard or home)\n> 23 |     await this.page.waitForURL(url => !url.toString().includes('/login'));\n     |                     ^\n  24 |   }\n  25 |\n  26 |   async logout() {\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:98:5"
+                        },
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 180000ms.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:49:17.193Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-26a35-w-their-posted-requirements-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                        "column": 21,
+                        "line": 23
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-979ab782d9dc44f51967",
+              "file": "homeowner.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "HO-05: Homeowner can view bids on their project",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 356537,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:132:7",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                          "column": 21,
+                          "line": 23
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\LoginPage.ts:23\n\n\u001b[0m \u001b[90m 21 |\u001b[39m     \n \u001b[90m 22 |\u001b[39m     \u001b[90m// Wait for the URL to change (e.g. redirect to dashboard or home)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mwaitForURL(url \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39murl\u001b[33m.\u001b[39mtoString()\u001b[33m.\u001b[39mincludes(\u001b[32m'/login'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m   }\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36masync\u001b[39m logout() {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                            "column": 21,
+                            "line": 23
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n   at ..\\pages\\LoginPage.ts:23\n\n  21 |     \n  22 |     // Wait for the URL to change (e.g. redirect to dashboard or home)\n> 23 |     await this.page.waitForURL(url => !url.toString().includes('/login'));\n     |                     ^\n  24 |   }\n  25 |\n  26 |   async logout() {\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:132:7"
+                        },
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 180000ms.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:49:17.596Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-ef2db--view-bids-on-their-project-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                        "column": 21,
+                        "line": 23
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-5d066919e7871751bfb4",
+              "file": "homeowner.spec.ts",
+              "line": 111,
+              "column": 7
+            },
+            {
+              "title": "HO-06: Homeowner can access messages",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 5,
+                      "status": "failed",
+                      "duration": 283030,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:140:5",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                          "column": 21,
+                          "line": 23
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\LoginPage.ts:23\n\n\u001b[0m \u001b[90m 21 |\u001b[39m     \n \u001b[90m 22 |\u001b[39m     \u001b[90m// Wait for the URL to change (e.g. redirect to dashboard or home)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mpage\u001b[33m.\u001b[39mwaitForURL(url \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39murl\u001b[33m.\u001b[39mtoString()\u001b[33m.\u001b[39mincludes(\u001b[32m'/login'\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m   }\n \u001b[90m 25 |\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36masync\u001b[39m logout() {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                            "column": 21,
+                            "line": 23
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n   at ..\\pages\\LoginPage.ts:23\n\n  21 |     \n  22 |     // Wait for the URL to change (e.g. redirect to dashboard or home)\n> 23 |     await this.page.waitForURL(url => !url.toString().includes('/login'));\n     |                     ^\n  24 |   }\n  25 |\n  26 |   async logout() {\n    at LoginPage.login (D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts:23:21)\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:140:5"
+                        },
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 180000ms.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:49:17.633Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-b0103-meowner-can-access-messages-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\pages\\LoginPage.ts",
+                        "column": 21,
+                        "line": 23
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-546ab19dcc731374f7ae",
+              "file": "homeowner.spec.ts",
+              "line": 139,
+              "column": 7
+            },
+            {
+              "title": "HO-07: Homeowner cannot access contractor-specific API endpoints",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 9698,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Homeowner bid attempt status: 403\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:54:59.870Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-ca38453faac09ea020af",
+              "file": "homeowner.spec.ts",
+              "line": 157,
+              "column": 7
+            },
+            {
+              "title": "HO-08: Homeowner can navigate to reviews section",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 73859,
+                      "error": {
+                        "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/dashboard\" until \"load\"\n============================================================",
+                        "stack": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/dashboard\" until \"load\"\n============================================================\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:177:16",
+                        "location": {
+                          "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts",
+                          "column": 16,
+                          "line": 177
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 175 |\u001b[39m   test(\u001b[32m'HO-08: Homeowner can navigate to reviews section'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 176 |\u001b[39m     \u001b[36mawait\u001b[39m loginPage\u001b[33m.\u001b[39mlogin(\u001b[33mHOMEOWNER\u001b[39m\u001b[33m.\u001b[39memail\u001b[33m,\u001b[39m \u001b[33mHOMEOWNER\u001b[39m\u001b[33m.\u001b[39mpassword)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 177 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForURL(\u001b[32m'/dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 178 |\u001b[39m     \n \u001b[90m 179 |\u001b[39m     \u001b[90m// Click Reviews tab\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[36mconst\u001b[39m reviewsTab \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Reviews, text=My Reviews'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts",
+                            "column": 16,
+                            "line": 177
+                          },
+                          "message": "TimeoutError: page.waitForURL: Timeout 60000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"/dashboard\" until \"load\"\n============================================================\n\n  175 |   test('HO-08: Homeowner can navigate to reviews section', async ({ page }) => {\n  176 |     await loginPage.login(HOMEOWNER.email, HOMEOWNER.password);\n> 177 |     await page.waitForURL('/dashboard');\n      |                ^\n  178 |     \n  179 |     // Click Reviews tab\n  180 |     const reviewsTab = page.locator('text=Reviews, text=My Reviews').first();\n    at D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts:177:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-29T06:55:10.156Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-22efd-navigate-to-reviews-section-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-22efd-navigate-to-reviews-section-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\find my interior\\findmyinterior-frontend\\test-results\\homeowner-Homeowner-E2E-Jo-22efd-navigate-to-reviews-section-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\find my interior\\findmyinterior-frontend\\e2e\\tests\\homeowner.spec.ts",
+                        "column": 16,
+                        "line": 177
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2c26040efb2da1e34cde-0534537d71d045c25909",
+              "file": "homeowner.spec.ts",
+              "line": 175,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-06-29T06:48:12.839Z",
+    "duration": 497189.686,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}

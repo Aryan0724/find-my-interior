@@ -180,8 +180,10 @@ class RecommendationEngineService
             if (!$vendor) continue;
 
             // Check daily notification count for today
+            // Laravel notifications table uses notifiable_id, not user_id
             $sentToday = DB::table('notifications')
-                ->where('user_id', $vendor->id)
+                ->where('notifiable_id', $vendor->id)
+                ->where('notifiable_type', get_class($vendor))
                 ->whereDate('created_at', today())
                 ->count();
 
@@ -191,12 +193,16 @@ class RecommendationEngineService
                 continue; // Skip — flood protection
             }
 
-            \Illuminate\Support\Facades\Notification::send([$vendor], new \App\Notifications\NewLeadNotification([
-                'title' => $requirement->title,
-                'city' => $requirement->city,
-                'requirement_id' => $requirement->id,
-                'match_score' => $row['match_score'],
-            ]));
+            try {
+                \Illuminate\Support\Facades\Notification::send([$vendor], new \App\Notifications\NewLeadNotification([
+                    'title' => $requirement->title,
+                    'city' => $requirement->city,
+                    'requirement_id' => $requirement->id,
+                    'match_score' => $row['match_score'],
+                ]));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning('Failed to send lead notification to vendor ' . $vendor->id . ': ' . $e->getMessage());
+            }
         }
     }
 }

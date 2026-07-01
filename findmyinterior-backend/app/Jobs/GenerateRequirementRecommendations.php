@@ -29,6 +29,10 @@ class GenerateRequirementRecommendations implements ShouldQueue
      */
     public function handle(RecommendationEngineService $recommendationService): void
     {
-        $recommendationService->generateFor($this->requirement);
+        try {
+            $recommendationService->generateFor($this->requirement);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('RecommendationEngine failed for requirement #' . $this->requirement->id . ': ' . $e->getMessage());
+        }
     }
 }

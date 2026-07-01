@@ -119,6 +119,8 @@ export default function PostRequirementPage() {
         payload.design_style = formData.style_preferences;
       } else if (selectedType === 'construction') {
         detailsText = `Plot Size: ${formData.plot_size}\nStage: ${formData.construction_stage}\nBudget: ${formData.budget}\nTimeline: ${formData.timeline}`;
+        payload.project_category = 'construction';
+        payload.project_type = 'construction';
         payload.area = formData.plot_size;
         payload.budget = formData.budget;
         payload.site_condition = formData.construction_stage;
@@ -134,6 +136,9 @@ export default function PostRequirementPage() {
         payload.duration = formData.duration;
       } else if (selectedType === 'builder_project') {
         detailsText = `Project Name: ${formData.project_name}\nScale: ${formData.project_scale}\nLocation: ${formData.project_location}\nBudget: ${formData.budget}\nTimeline: ${formData.timeline}`;
+        payload.project_category = 'builder_project';
+        payload.project_type = 'builder_project';
+        payload.budget = formData.budget;
       }
       
       payload.description = `${formData.description}\n\n[Details]\n${detailsText}`;
