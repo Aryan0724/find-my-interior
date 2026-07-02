@@ -42,6 +42,7 @@ class RequirementResource extends JsonResource
             'status'         => $this->status,
             'bids_count'     => $this->whenCounted('bids'),
             'views_count'    => $this->views_count ?? null,
+            'image'          => $this->image,
             'images'         => RequirementImageResource::collection($this->whenLoaded('images')),
             // Contact details — only for premium subscribers or admin
             'name'           => $canSeeContact ? $this->name : '***',
